@@ -1,25 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
-
-    <include
-        layout="@layout/app_bar_home"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+    tools:context="com.example.sriram.dalalstreet.Home"
+    android:background="#000000">
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_home_drawer" />
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="italic"
+        android:textSize="50sp"
+        android:text="Dalal Street"
+        android:textColor="#FFFFFF"
+        android:id="@+id/home_Title"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true" />
 
-</android.support.v4.widget.DrawerLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/home_Title"
+        android:id="@+id/home_ButtonHolder">
+        <Button
+            style="?android:attr/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/home_Manual"
+            android:onClick="Show_Manual"
+            android:text="Manual"
+            />
+        <Button
+            style="?android:attr/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="Show_Contact"
+            android:id="@+id/home_Contact"
+            android:text="Contact"
+            />
+        <Button
+            style="?android:attr/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="Play_Dalal"
+            android:id="@+id/home_play_Dalal"
+            android:text="Play Dalal"
+            />
+    </LinearLayout>
+
+    <com.daimajia.slider.library.SliderLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/home_ButtonHolder"
+        android:id="@+id/slider">
+    </com.daimajia.slider.library.SliderLayout>
+
+    <com.daimajia.slider.library.Indicators.PagerIndicator
+        android:id="@+id/custom_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        style="@style/AndroidImageSlider_Attractive_Rect_Blue"
+        />
+
+</RelativeLayout>
