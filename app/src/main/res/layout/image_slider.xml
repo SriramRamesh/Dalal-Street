@@ -1,9 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:id="@+id/list_item_text"
-    android:textSize="16sp"
-    android:gravity="left|center_vertical"
-    android:padding="10dp" />
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".play_Dalal"
+    tools:showIn="@layout/app_bar_play_dalal">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Market events"
+            android:layout_marginTop="10dp"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:background="#428BCA"
+            android:id="@+id/stockEvents"
+            />
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:text="Cash"
+            android:textColor="@android:color/white"
+            android:background="#5CB85C"
+            android:id="@+id/cash"
+            />
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:background="#F0AD4E"
+            android:textAllCaps="true"
+            android:text="Stock"
+            android:id="@+id/stock"
+            />
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Net Wealth"
+            android:background="#D9534F"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:id="@+id/netWealth"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,16 +1,25 @@
 package com.example.sriram.dalalstreet;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Application;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -25,13 +34,15 @@ import java.util.HashMap;
 
 import javax.xml.transform.Transformer;
 
-public class Home extends Activity {
+public class Home extends AppCompatActivity {
     private SliderLayout sliderShow;
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        context=getApplicationContext();
         sliderShow = (SliderLayout) findViewById(R.id.slider);
 
         TextSliderView textSliderView = new TextSliderView(this);
@@ -77,6 +88,8 @@ public class Home extends Activity {
                 .image(R.drawable.hdfc1);
 
         sliderShow.addSlider(textSliderView);
+        PagerIndicator pagerIndicator=(PagerIndicator)findViewById(R.id.custom_indicator);
+        sliderShow.setCustomIndicator(pagerIndicator);
 
     }
 
@@ -86,11 +99,31 @@ public class Home extends Activity {
         return;
     }
     public void Show_Contact(View v){
-        Toast.makeText(getApplicationContext(), "contact :", Toast.LENGTH_SHORT);
+
+        LayoutInflater layoutInflater
+                = (LayoutInflater)getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.contact_popup, null);
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button btnDismiss = (Button)popupView.findViewById(R.id.pop_Up_ok);
+        btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        popupView.setAlpha((float)0.8);
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
         return;
     }
     public void Show_Manual(View v){
-        Toast.makeText(getApplicationContext(), "Manual:", Toast.LENGTH_SHORT);
+        Intent intent=new Intent(Home.this,Manual.class);
+        startActivity(intent);
         return;
     }
     @Override
