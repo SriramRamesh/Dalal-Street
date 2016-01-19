@@ -10,18 +10,50 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.sriram.dalalstreet.Test">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="italic"
-        android:textSize="50sp"
+        android:textStyle="bold"
+        android:textSize="50dp"
         android:text="Dalal Street"
-        android:textColor="#FFFFFF"
+        android:textColor="#ff0000"
         android:id="@+id/home_Title"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true" />
 
+
+    <com.example.sriram.dalalstreet.TextViewWithImages
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/home_Title"
+        android:id="@+id/home_stock_new"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit ="marquee_forever"
+        android:focusable="true"
+        android:drawablePadding="5dp"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="@string/home_stock_news"
+        />
+
+
+    <com.daimajia.slider.library.SliderLayout
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/home_stock_new"
+        android:id="@+id/slider">
+    </com.daimajia.slider.library.SliderLayout>
+
+    <com.daimajia.slider.library.Indicators.PagerIndicator
+        android:id="@+id/custom_indicator"
+        android:layout_below="@+id/slider"
+        style="@style/AndroidImageSlider_Attractive_Rect_Blue"
+        />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,18 +92,6 @@
             android:background="#6fff43" />
     </LinearLayout>
 
-    <com.daimajia.slider.library.SliderLayout
-        android:layout_width="fill_parent"
-        android:layout_height="200sp"
-        android:layout_below="@+id/home_Title"
-        android:id="@+id/slider">
-    </com.daimajia.slider.library.SliderLayout>
-
-    <com.daimajia.slider.library.Indicators.PagerIndicator
-        android:id="@+id/custom_indicator"
-        android:layout_below="@+id/slider"
-        style="@style/AndroidImageSlider_Attractive_Rect_Blue"
-        />
 
 
 </RelativeLayout>
