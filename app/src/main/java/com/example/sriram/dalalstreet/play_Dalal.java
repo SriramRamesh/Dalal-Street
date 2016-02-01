@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class play_Dalal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +40,7 @@ public class play_Dalal extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //TextView Dalal
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -80,17 +82,25 @@ public class play_Dalal extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_stock_exchange_play_Dalal) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        }
+        else if (id == R.id.nav_buy_play_Dalal) {
 
-        } else if (id == R.id.nav_slideshow) {
+        }
+        else if (id == R.id.nav_bank_mortage_play_Dalal) {
 
-        } else if (id == R.id.nav_manage) {
+        }
+        else if (id == R.id.nav_company_profile_play_Dalal) {
 
-        } else if (id == R.id.nav_share) {
+        }
+        else if (id == R.id.nav_bids_play_Dalal) {
 
-        } else if (id == R.id.nav_send) {
+        }
+        else if(id == R.id.nav_leaderboard_play_Dalal){
+
+        }
+        else if (id == R.id.nav_panel_play_Dalal) {
 
         }
 

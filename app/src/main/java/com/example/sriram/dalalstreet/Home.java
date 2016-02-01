@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
@@ -101,10 +102,11 @@ public class Home extends Activity {
 
             @Override
             public void onClick(View v) {
+
                 popupWindow.dismiss();
             }
         });
-        popupView.setAlpha((float) 0.8);
+        //popupView.setAlpha((float) 0.9);
         popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
         return;
     }
