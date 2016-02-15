@@ -66,4 +66,6 @@
         You can now play Dalal Street on the go.The new interface is compatible with <b>mobile devices.</b>
         <b>Do not hesitate to contact us if you face any problems.</b>Have a great Pragyan!"
     </string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
 </resources>
