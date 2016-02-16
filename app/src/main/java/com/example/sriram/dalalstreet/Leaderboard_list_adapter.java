@@ -18,24 +18,32 @@ import java.util.jar.Attributes;
  */
 public class Leaderboard_list_adapter extends ArrayAdapter<String> {
 
-    String[] Names;
+    ArrayList<String> Names;
+    ArrayList<Integer> Pid;
+    //String[] Total;
     Context context;
-    public Leaderboard_list_adapter(Context context2, String[] names_args) {
+    public Leaderboard_list_adapter(Context context2, ArrayList<Integer> Pid_args,ArrayList<String> names_args) {
         super(context2,-1,names_args);
         context=context2;
+        Pid=Pid_args;
         Names=names_args;
+        //Total=total_args;
 
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.leaderboard_item, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.leaderboard_item_name);
-        TextView textViewrank = (TextView) rowView.findViewById(R.id.leaderboard_item_rank);
-        textView.setText(Names[position]);
-        int temp=position+1;
-        textViewrank.setText(""+temp);
+
+        TextView textView_Names = (TextView) rowView.findViewById(R.id.name_leaderboard_item);
+        TextView textView_Pid = (TextView) rowView.findViewById(R.id.pid_leaderboard_item);
+        //TextView textView_total=(TextView)rowView.findViewById(R.id.total_leaderboard_item);
+
+        textView_Pid.setText(Pid.get(position)+"");
+        textView_Names.setText(Names.get(position));
         return rowView;
     }
+
 }

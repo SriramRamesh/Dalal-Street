@@ -3,7 +3,10 @@ package com.example.sriram.dalalstreet;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -29,8 +32,21 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -293,6 +309,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    /*public void check_login(){
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Authenticating...");
+        pDialog.setCancelable(false);
+        pDialog.setCanceledOnTouchOutside(false);
+        pDialog.show();
+        String api=getString(R.string.api);
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, "https://"+api+"/tshirt/auth",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+
+                            JSONObject jsonResponse = new JSONObject(response);
+                            int status = jsonResponse.getInt("status");
+                            pDialog.dismiss();
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError data) {
+                        pDialog.dismiss();
+                        data.printStackTrace();
+                        Toast.makeText(LoginActivity.this, "Error", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<>();
+                // the POST parameters:
+                params.put("auth_pin",PinStr);
+                return params;
+            }
+        };
+        Volley.newRequestQueue(this).add(postRequest);
+
+    }*/
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
