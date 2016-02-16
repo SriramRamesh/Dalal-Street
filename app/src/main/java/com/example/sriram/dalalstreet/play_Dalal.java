@@ -61,8 +61,8 @@ public class play_Dalal extends AppCompatActivity
     LinearLayout linearLayout;
     TextView textView;
     JSONArray leaderboard=null;
-    ArrayList<String> Names;
-    ArrayList<Integer> Pid;
+    ArrayList<String> Names=new ArrayList<String>();
+    ArrayList<Integer> Pid=new ArrayList<Integer>();
     //String[] Total=new String[300];
 
     @Override
@@ -70,6 +70,7 @@ public class play_Dalal extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_dalal);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 
         textView = (TextView) findViewById(R.id.title_content_play_dalal);
         textView.setText("Dalal Panel");
