@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -74,18 +75,22 @@ public class play_Dalal extends AppCompatActivity
     ArrayList<String> Names=new ArrayList<String>();
     ArrayList<Integer> Pid=new ArrayList<Integer>();
     //String[] Total=new String[300];
+    static Boolean progress_flag;
+
     Button market_events;
     Button Cash;
     Button Stocks;
     Button Net_Wealth;
     Spinner companies;
     ListView listView;
-
+    ProgressDialog pDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_dalal);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        progress_flag=false;
+
 
         api=new Api(getApplicationContext());
         api.api_Dalal_home();
@@ -103,7 +108,16 @@ public class play_Dalal extends AppCompatActivity
         linearLayout = (LinearLayout) findViewById(R.id.Layout_play_dalal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if(!progress_flag) {
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Updating...");
+            pDialog.setCancelable(false);
+            pDialog.setCanceledOnTouchOutside(false);
+            pDialog.show();
+        }
+
         dalal_Home();
+
         getLeaderboard();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -124,6 +138,10 @@ public class play_Dalal extends AppCompatActivity
         int Stock_Value=api.getStock();
 
         Log.d("api","cash"+Cash_Value+"net"+Net_Value+"id"+Id+"stock"+Stock_Value);
+        if(Cash_Value!=null&&Net_Value!=null&&Id!=null&&Stock_Value!=0 ){
+           progress_flag=true;
+            pDialog.dismiss();
+        }
         ArrayList<String> Names_Value=api.getNames();
         market_events.setText(market_events_No+"\nMarket Events");
         Cash.setText(Cash_Value + "\nCash");
@@ -187,18 +205,29 @@ public class play_Dalal extends AppCompatActivity
         Fragment fragment = null;
         if (id == R.id.nav_stock_exchange_play_Dalal) {
             textView.setText("Stock Exchange");
+            api.api_Stocks();
+            fragment=Stock_Exchange.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),1);
             // Handle the camera action
-        } else if (id == R.id.nav_buy_play_Dalal) {
-            textView.setText("Transaction Panel");
+        }
+        else if (id == R.id.nav_buy_and_sell_play_Dalal) {
+            textView.setText("Buy and Sell");
+            api.api_Stocks();
+            fragment=Stock_Exchange.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),2);
+
+
         } else if (id == R.id.nav_bank_mortage_play_Dalal) {
             textView.setText("Bank");
+            //TODO:api.Bank_Morgage()
+            //TODO fragment=Bank_Mortgage.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),api.getStock_Bought());
 
-        } else if (id == R.id.nav_company_profile_play_Dalal) {
-            textView.setText("Company Profiles");
-            fragment=new Company_Profile();
-
+        } else if (id == R.id.nav_transaction_play_Dalal) {
+            textView.setText("Transaction");
+            //TODO: api for transaction
+            //fragment=Transaction.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),api.getStock_Worth(),api.getStock_Bought());
         } else if (id == R.id.nav_bids_play_Dalal) {
             textView.setText("Bids And Asks");
+            api.api_Bids_and_Asks();
+            fragment=Bids_and_Asks.newInstance(context,api.getBids(),api.getAsks());
 
         } else if (id == R.id.nav_leaderboard_play_Dalal) {
 
@@ -224,6 +253,7 @@ public class play_Dalal extends AppCompatActivity
                 Log.d("test","Json is null");
             }
         } else if (id == R.id.nav_panel_play_Dalal) {
+            textView.setText("Dalal Panel");
             dalal_Home();
 
 

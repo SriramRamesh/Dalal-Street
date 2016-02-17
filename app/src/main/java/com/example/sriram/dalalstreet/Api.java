@@ -34,9 +34,124 @@ public class Api {
     ArrayList<Integer> Id=new ArrayList<>();
     JSONArray market_event_list;
     ArrayList<String> Names=new ArrayList<>();
+
+    ArrayList<String> Bids=new ArrayList<>();
+    ArrayList<String> Asks=new ArrayList<>();
+
+    ArrayList<String> Stock_Names=new ArrayList<>();
+    ArrayList<String> Current_Price=new ArrayList<>();
+    JSONArray stocks_array;
     Context context;
     public Api(Context context_args){
         context=context_args;
+    }
+
+    public void api_Stocks(){
+        String api = context.getString(R.string.api);
+        String url="http://"+api + "/api/stocks";
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d("test", "api response" + response);
+                    stocks_array=response.getJSONArray("stocks_list");
+
+                    for(int i=0;i<stocks_array.length();i++){
+                        JSONObject temp=stocks_array.getJSONObject(i);
+                        Stock_Names.add(temp.getString("stockname"));
+                        Current_Price.add(temp.getString("currentprice"));
+                    }
+
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String data="Error";
+                if(error instanceof NoConnectionError) {
+                    data= "No internet Access, Check your internet connection.";
+                }
+                error.printStackTrace();
+                Log.d("volley error", "" + error);
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                // the GET headers:
+                headers.put("X-DALAL-API-EMAIL", "lol@pol.com");
+                headers.put("X-DALAL-API-PASSWORD", "password");
+                return headers;
+            }
+        };
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
+
+    }
+
+    public void api_Bids_and_Asks(){
+        String api = context.getString(R.string.api);
+        String url="http://"+api + "/api/bids_and_asks";
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d("test", "api response" + response);
+                    JSONArray bids=response.getJSONArray("bids");
+                    JSONArray asks=response.getJSONArray("asks");
+                    for(int i=0;i<bids.length();i++){
+                        JSONObject temp=bids.getJSONObject(i);
+                        Bids.add(temp.getString("message"));
+                    }
+                    for(int i=0;i<asks.length();i++){
+                        JSONObject temp=asks.getJSONObject(i);
+                        Asks.add(temp.getString("message"));
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String data="Error";
+                if(error instanceof NoConnectionError) {
+                    data= "No internet Access, Check your internet connection.";
+                }
+                error.printStackTrace();
+                Log.d("volley error", "" + error);
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                // the GET headers:
+                headers.put("X-DALAL-API-EMAIL", "lol@pol.com");
+                headers.put("X-DALAL-API-PASSWORD", "password");
+                return headers;
+            }
+        };
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
+
     }
     public void api_Dalal_home(){
         String api = context.getString(R.string.api);
@@ -126,7 +241,7 @@ public class Api {
                 JSONObject temp = market_event_list.getJSONObject(i);
                 if (temp != null) {
                     if(temp.getInt("stock_id")==id) {
-                      ans.add(temp.getString("eventname"));
+                        ans.add(temp.getString("eventname"));
                     }
                 }
             }catch (Exception e){
@@ -138,5 +253,22 @@ public class Api {
     public ArrayList<Integer> getId(){
         return Id;
     }
-
+    public ArrayList<String> getBids(){return Bids;}
+    public ArrayList<String> getAsks(){return Asks;}
+    public ArrayList<String> getStock_Names(){return Stock_Names;}
+    public ArrayList<String> getCurrent_Price(){return Current_Price;}
+    public JSONObject get_Stock_Info(String Stock_Name){
+        JSONObject temp=new JSONObject();
+        for(int i=0;i<stocks_array.length();i++){
+            try{
+                temp=stocks_array.getJSONObject(i);
+                if(temp.getString("stockname").equals(Stock_Name)){
+                    break;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return temp;
+    }
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stock_Name_transaction"
+        android:layout_gravity="left|start"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/current_transaction"
+        android:textSize="20dp"
+        android:layout_gravity="left|start"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/stock_bought_transaction"
+        android:layout_gravity="left|start"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stock_worth_transaction"
+        android:textSize="20dp"
+        android:layout_gravity="left|start"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        />
+
+
+
+</LinearLayout>

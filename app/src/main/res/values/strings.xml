@@ -69,4 +69,6 @@
 
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
+    <string name="title_activity_stock__exchange_activity">Stock_Exchange_activity</string>
+    <string name="title_activity_buy_and__sell_activity">Buy_and_Sell_activity</string>
 </resources>

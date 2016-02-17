@@ -35,7 +35,19 @@
         <activity
             android:name=".Manual"
             android:label="@string/title_activity_manual"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Stock_Exchange_activity"
+            android:label="@string/title_activity_stock__exchange_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Buy_and_Sell_activity"
+            android:label="@string/title_activity_buy_and__sell_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Buy" />
+        <activity android:name=".Sell" />
+        <activity android:name=".Trade" />
+        <activity android:name=".Bank_Mortgage_activity"></activity>
     </application>
 
 </manifest>
