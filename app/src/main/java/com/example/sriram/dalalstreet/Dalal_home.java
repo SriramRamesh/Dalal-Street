@@ -1,32 +1,29 @@
 package com.example.sriram.dalalstreet;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Leaderboard extends Fragment{
-
+/**
+ * Created by sriram on 17/2/16.
+ */
+public class Dalal_home extends Fragment {
     static Context context2;
     ArrayList<String> Names;
     ArrayList<Integer> Pid;
     //String[] Total;
 
-  /*  public Leaderboard(ArrayList<String> Names_args,ArrayList<Integer> Pid_args){
-        Names=Names_args;
-        Pid=Pid_args;
+    /*  public Leaderboard(ArrayList<String> Names_args,ArrayList<Integer> Pid_args){
+          Names=Names_args;
+          Pid=Pid_args;
 
-    }*/
+      }*/
     public static Leaderboard newInstance(Context context, ArrayList<String> Names_args,ArrayList<Integer> Pid_args){
         Leaderboard leaderboard=new Leaderboard();
         context2=context;

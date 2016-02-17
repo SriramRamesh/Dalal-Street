@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,8 +20,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,12 +67,19 @@ public class play_Dalal extends AppCompatActivity
 
 
     Context context;
+    Api api;
     LinearLayout linearLayout;
     TextView textView;
     JSONArray leaderboard=null;
     ArrayList<String> Names=new ArrayList<String>();
     ArrayList<Integer> Pid=new ArrayList<Integer>();
     //String[] Total=new String[300];
+    Button market_events;
+    Button Cash;
+    Button Stocks;
+    Button Net_Wealth;
+    Spinner companies;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +87,23 @@ public class play_Dalal extends AppCompatActivity
         setContentView(R.layout.activity_play_dalal);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
+        api=new Api(getApplicationContext());
+        api.api_Dalal_home();
 
+        market_events=(Button)findViewById(R.id.marketEvents);
+        Cash=(Button)findViewById(R.id.cash);
+        Stocks=(Button)findViewById(R.id.stock);
+        Net_Wealth=(Button)findViewById(R.id.netWealth);
+        companies=(Spinner)findViewById(R.id.home_spinner);
+        listView=(ListView)findViewById(R.id.market_list_content);
         textView = (TextView) findViewById(R.id.title_content_play_dalal);
+
         textView.setText("Dalal Panel");
         context = getApplicationContext();
         linearLayout = (LinearLayout) findViewById(R.id.Layout_play_dalal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        dalal_Home();
         getLeaderboard();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -89,6 +115,38 @@ public class play_Dalal extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    void dalal_Home(){
+
+        int market_events_No=api.getMarket_events();
+        String Cash_Value=api.getCash();
+        String Net_Value=api.getNet();
+        final ArrayList<Integer> Id=api.getId();
+        int Stock_Value=api.getStock();
+
+        Log.d("api","cash"+Cash_Value+"net"+Net_Value+"id"+Id+"stock"+Stock_Value);
+        ArrayList<String> Names_Value=api.getNames();
+        market_events.setText(market_events_No+"\nMarket Events");
+        Cash.setText(Cash_Value + "\nCash");
+        Net_Wealth.setText(Net_Value + "\nNet Wealth");
+        Stocks.setText(Stock_Value + "\nStocks");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Names_Value);
+        companies.setAdapter(dataAdapter);
+
+        companies.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<String> events=api.getMarket_event_list(Id.get(position));
+                ArrayAdapter arrayAdapter=new ArrayAdapter(context,android.R.layout.simple_list_item_1,events);
+                listView.setAdapter(arrayAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -137,7 +195,7 @@ public class play_Dalal extends AppCompatActivity
 
         } else if (id == R.id.nav_company_profile_play_Dalal) {
             textView.setText("Company Profiles");
-            //fragment=Company_Profile.newInstance(context)
+            fragment=new Company_Profile();
 
         } else if (id == R.id.nav_bids_play_Dalal) {
             textView.setText("Bids And Asks");
@@ -166,6 +224,8 @@ public class play_Dalal extends AppCompatActivity
                 Log.d("test","Json is null");
             }
         } else if (id == R.id.nav_panel_play_Dalal) {
+            dalal_Home();
+
 
         }
         if (fragment != null) {
@@ -184,6 +244,7 @@ public class play_Dalal extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     void getLeaderboard() {
 

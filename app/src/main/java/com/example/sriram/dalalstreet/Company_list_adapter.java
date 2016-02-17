@@ -8,18 +8,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by sriram on 16/2/16.
  */
 public class Company_list_adapter extends ArrayAdapter<String>{
 
-        String[] Company_Names;
-        String[] Current_Price;
-        int[] updown;
-        int[] Stocks_in_market;
+    ArrayList<String> Company_Names=new ArrayList<String>();
+    ArrayList<String> Current_Price=new ArrayList<String>();
+    ArrayList<Integer> updown=new ArrayList<Integer>();
+    ArrayList<Integer> Stocks_in_market=new ArrayList<Integer>();
         Context context;
-        public Company_list_adapter(Context context2, String[] company_Names_args,
-                                    String[] current_Price_args,int[] updown_args,int[] stocks_in_market_args) {
+        public Company_list_adapter(Context context2,
+                                    ArrayList<String> company_Names_args,
+                                    ArrayList<String> current_Price_args,
+                                    ArrayList<Integer> updown_args,
+                                    ArrayList<Integer> stocks_in_market_args) {
             super(context2,-1,company_Names_args);
             context=context2;
             Company_Names=company_Names_args;
@@ -39,15 +44,15 @@ public class Company_list_adapter extends ArrayAdapter<String>{
             TextViewWithImages textView_Price = (TextViewWithImages) rowView.findViewById(R.id.stock_current_price_company_item);
             TextView textView_stocks_in_market=(TextView)rowView.findViewById(R.id.stocks_in_market_company_item);
 
-            textView_Names.setText(Company_Names[position]);
-            if(updown[position]==1){
-                textView_Price.setText(Current_Price[position]+"[img src=green/]");
+            textView_Names.setText(Company_Names.get(position));
+            if(updown.get(position)==1){
+                textView_Price.setText(Current_Price.get(position)+"[img src=green/]");
             }
             else {
-                textView_Price.setText(Current_Price[position]+"[img src=red/]");
+                textView_Price.setText(Current_Price.get(position)+"[img src=red/]");
             }
 
-            textView_stocks_in_market.setText(Stocks_in_market[position]);
+            textView_stocks_in_market.setText(Stocks_in_market.get(position));
 
             return rowView;
         }
