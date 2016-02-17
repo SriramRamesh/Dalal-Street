@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.jar.Attributes;
 
@@ -27,44 +28,44 @@ import java.util.jar.Attributes;
  * Created by sriram on 17/2/16.
  */
 public class Api {
-    int market_events=0;
-    String Cash=new String();
-    String Net=new String();
-    int Stock=0;
-    ArrayList<Integer> Id=new ArrayList<>();
+    int market_events = 0;
+    String Cash = new String();
+    String Net = new String();
+    int Stock = 0;
+    ArrayList<Integer> Id = new ArrayList<>();
     JSONArray market_event_list;
-    ArrayList<String> Names=new ArrayList<>();
+    ArrayList<String> Names = new ArrayList<>();
+    ArrayList<String> api_Market_events_Company = new ArrayList<>();
+    ArrayList<String> Bids = new ArrayList<>();
+    ArrayList<String> Asks = new ArrayList<>();
 
-    ArrayList<String> Bids=new ArrayList<>();
-    ArrayList<String> Asks=new ArrayList<>();
-
-    ArrayList<String> Stock_Names=new ArrayList<>();
-    ArrayList<String> Current_Price=new ArrayList<>();
+    ArrayList<String> Stock_Names = new ArrayList<>();
+    ArrayList<String> Current_Price = new ArrayList<>();
     JSONArray stocks_array;
     Context context;
-    public Api(Context context_args){
-        context=context_args;
+
+    public Api(Context context_args) {
+        context = context_args;
     }
 
-    public void api_Stocks(){
+    public void api_Stocks() {
         String api = context.getString(R.string.api);
-        String url="http://"+api + "/api/stocks";
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url,
+        String url = "http://" + api + "/api/stocks";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     Log.d("test", "api response" + response);
-                    stocks_array=response.getJSONArray("stocks_list");
+                    stocks_array = response.getJSONArray("stocks_list");
 
-                    for(int i=0;i<stocks_array.length();i++){
-                        JSONObject temp=stocks_array.getJSONObject(i);
+                    for (int i = 0; i < stocks_array.length(); i++) {
+                        JSONObject temp = stocks_array.getJSONObject(i);
                         Stock_Names.add(temp.getString("stockname"));
                         Current_Price.add(temp.getString("currentprice"));
                     }
 
-                }
-                catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
@@ -73,9 +74,9 @@ public class Api {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String data="Error";
-                if(error instanceof NoConnectionError) {
-                    data= "No internet Access, Check your internet connection.";
+                String data = "Error";
+                if (error instanceof NoConnectionError) {
+                    data = "No internet Access, Check your internet connection.";
                 }
                 error.printStackTrace();
                 Log.d("volley error", "" + error);
@@ -99,27 +100,161 @@ public class Api {
 
     }
 
-    public void api_Bids_and_Asks(){
+    public void api_Bids_and_Asks() {
         String api = context.getString(R.string.api);
-        String url="http://"+api + "/api/bids_and_asks";
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url,
+        String url = "http://" + api + "/api/bids_and_asks";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     Log.d("test", "api response" + response);
-                    JSONArray bids=response.getJSONArray("bids");
-                    JSONArray asks=response.getJSONArray("asks");
-                    for(int i=0;i<bids.length();i++){
-                        JSONObject temp=bids.getJSONObject(i);
+                    JSONArray bids = response.getJSONArray("bids");
+                    JSONArray asks = response.getJSONArray("asks");
+                    for (int i = 0; i < bids.length(); i++) {
+                        JSONObject temp = bids.getJSONObject(i);
                         Bids.add(temp.getString("message"));
                     }
-                    for(int i=0;i<asks.length();i++){
-                        JSONObject temp=asks.getJSONObject(i);
+                    for (int i = 0; i < asks.length(); i++) {
+                        JSONObject temp = asks.getJSONObject(i);
                         Asks.add(temp.getString("message"));
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                catch (JSONException e) {
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String data = "Error";
+                if (error instanceof NoConnectionError) {
+                    data = "No internet Access, Check your internet connection.";
+                }
+                error.printStackTrace();
+                Log.d("volley error", "" + error);
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                // the GET headers:
+                headers.put("X-DALAL-API-EMAIL", "lol@pol.com");
+                headers.put("X-DALAL-API-PASSWORD", "password");
+                return headers;
+            }
+        };
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
+
+    }
+
+    public ArrayList<String> api_getMarketevent(String Stock_Name_args) {
+
+        final String Stock_Name=Stock_Name_args;
+        if(Stock_Name==null){
+            return null;
+        }
+        String api = context.getString(R.string.api);
+        String url = "http://" + api + "/api/home"+"?company="+Stock_Name;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String temp2=Stock_Name;
+                try {
+
+                    market_event_list = response.getJSONArray("market_events_list");
+
+                    for (int i = 0; i < market_event_list.length(); i++) {
+                        JSONObject temp = market_event_list.getJSONObject(i);
+                        if (temp != null) {
+                            api_Market_events_Company.add(temp.getString("eventname"));
+                        }
+                    }
+                    Log.d("api_getMarket","Stock:"+temp2+"\n"+api_Market_events_Company);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String data = "Error";
+                if (error instanceof NoConnectionError) {
+                    data = "No internet Access, Check your internet connection.";
+                }
+                error.printStackTrace();
+                Log.d("volley error", "" + error);
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                // the GET headers:
+                headers.put("X-DALAL-API-EMAIL", "lol@pol.com");
+                headers.put("X-DALAL-API-PASSWORD", "password");
+                return headers;
+            }
+
+            /*@Override
+            public Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("company", Stock_Name);
+                return params;
+            }*/
+        };
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
+        return api_Market_events_Company;
+    }
+
+
+
+
+    public void api_Bank_Mortgage() {
+        String api = context.getString(R.string.api);
+        String url="http://"+api + "/api/mortgage";
+        JsonObjectRequest jsonObjectRequest=                    new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d("test", "api response" + response);
+                    Stock=response.getInt("price_of_tot_stock");
+                    Cash=response.getString("user_current_cash");
+                    Net=response.getString("user_total_calculator");
+                    market_events=response.getInt("market_events_total");
+                    Log.d("inside api","cash"+Cash+"net"+Net+"market"+market_events+"stock"+Stock);
+
+                    JSONArray stock_list = response.getJSONArray("stocks_list");
+                    market_event_list=response.getJSONArray("market_events_list");
+                    if(stock_list!=null) {
+                        for (int i = 0; i < stock_list.length(); i++) {
+                            try {
+                                JSONObject x =stock_list.getJSONObject(i);
+                                if(x != null) {
+                                    Names.add(x.getString("stockname"));
+                                    Id.add(x.getInt("id"));
+                                }
+                            } catch (Exception e) {
+                                Log.d("respone to json","Error");
+                                e.printStackTrace();
+                                break;
+                            }
+                        }
+                        Log.d("inside Api Debug","Names"+Names);
+                    }
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
@@ -151,8 +286,8 @@ public class Api {
         jsonObjectRequest.setRetryPolicy(policy);
 
         Volley.newRequestQueue(context).add(jsonObjectRequest);
-
     }
+
     public void api_Dalal_home(){
         String api = context.getString(R.string.api);
         String url="http://"+api + "/api/home";
@@ -183,6 +318,7 @@ public class Api {
                                 break;
                             }
                         }
+                        Log.d("inside Api Debug","Names"+Names);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -233,23 +369,23 @@ public class Api {
     public ArrayList<String> getNames(){
         return Names;
     }
-    public ArrayList<String> getMarket_event_list(int id){
-        ArrayList<String> ans=new ArrayList<>();//id specific market event
-        for(int i=0;i<market_event_list.length();i++)
-        {
-            try {
-                JSONObject temp = market_event_list.getJSONObject(i);
-                if (temp != null) {
-                    if(temp.getInt("stock_id")==id) {
-                        ans.add(temp.getString("eventname"));
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        return ans;
-    }
+    /* public ArrayList<String> getMarket_event_list(int id){
+         ArrayList<String> ans=new ArrayList<>();//id specific market event
+         for(int i=0;i<market_event_list.length();i++)
+         {
+             try {
+                 JSONObject temp = market_event_list.getJSONObject(i);
+                 if (temp != null) {
+                     if(temp.getInt("stock_id")==id) {
+                         ans.add(temp.getString("eventname"));
+                     }
+                 }
+             }catch (Exception e){
+                 e.printStackTrace();
+             }
+         }
+         return ans;
+     }*/
     public ArrayList<Integer> getId(){
         return Id;
     }

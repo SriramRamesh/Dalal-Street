@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -75,7 +76,7 @@ public class play_Dalal extends AppCompatActivity
     ArrayList<String> Names=new ArrayList<String>();
     ArrayList<Integer> Pid=new ArrayList<Integer>();
     //String[] Total=new String[300];
-    static Boolean progress_flag;
+   // static Boolean progress_flag;
 
     Button market_events;
     Button Cash;
@@ -83,14 +84,16 @@ public class play_Dalal extends AppCompatActivity
     Button Net_Wealth;
     Spinner companies;
     ListView listView;
-    ProgressDialog pDialog;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_dalal);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        progress_flag=false;
 
+        progressBar=(ProgressBar)findViewById(R.id.progress_play_Dalal);
+        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.serIndeterminate();
 
         api=new Api(getApplicationContext());
         api.api_Dalal_home();
@@ -103,18 +106,11 @@ public class play_Dalal extends AppCompatActivity
         listView=(ListView)findViewById(R.id.market_list_content);
         textView = (TextView) findViewById(R.id.title_content_play_dalal);
 
-        textView.setText("Dalal Panel");
+        textView.setText("Market Events");
         context = getApplicationContext();
         linearLayout = (LinearLayout) findViewById(R.id.Layout_play_dalal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(!progress_flag) {
-            pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Updating...");
-            pDialog.setCancelable(false);
-            pDialog.setCanceledOnTouchOutside(false);
-            pDialog.show();
-        }
 
         dalal_Home();
 
@@ -136,24 +132,31 @@ public class play_Dalal extends AppCompatActivity
         String Net_Value=api.getNet();
         final ArrayList<Integer> Id=api.getId();
         int Stock_Value=api.getStock();
+        final ArrayList<String> Names_Value=api.getNames();
 
-        Log.d("api","cash"+Cash_Value+"net"+Net_Value+"id"+Id+"stock"+Stock_Value);
-        if(Cash_Value!=null&&Net_Value!=null&&Id!=null&&Stock_Value!=0 ){
-           progress_flag=true;
-            pDialog.dismiss();
+        Log.d("api","cash"+Cash_Value+"net"+Net_Value+"id"+Id+"stock"+Stock_Value+"\nNames"+Names_Value);
+        if(Cash_Value!=null&&Net_Value!=null&&Id!=null&&Stock_Value!=0&&Names_Value!=null){
+            progressBar.setVisibility(View.GONE);
+            Log.d("dalal_home","All have values");
+
         }
-        ArrayList<String> Names_Value=api.getNames();
-        market_events.setText(market_events_No+"\nMarket Events");
+        if(Names_Value==null&&Cash_Value!=null){
+            Log.d("dalal_home","accessing server again");
+            api.api_Dalal_home();
+            dalal_Home();
+        }
+       market_events.setText(market_events_No+"\nMarket Events");
         Cash.setText(Cash_Value + "\nCash");
         Net_Wealth.setText(Net_Value + "\nNet Wealth");
         Stocks.setText(Stock_Value + "\nStocks");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Names_Value);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, Names_Value);
         companies.setAdapter(dataAdapter);
 
         companies.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<String> events=api.getMarket_event_list(Id.get(position));
+                progressBar.setVisibility(View.VISIBLE);
+                ArrayList<String> events=api.api_getMarketevent(Names_Value.get(position));
                 ArrayAdapter arrayAdapter=new ArrayAdapter(context,android.R.layout.simple_list_item_1,events);
                 listView.setAdapter(arrayAdapter);
             }
@@ -201,6 +204,7 @@ public class play_Dalal extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        progressBar.setVisibility(View.GONE);
         int id = item.getItemId();
         Fragment fragment = null;
         if (id == R.id.nav_stock_exchange_play_Dalal) {
@@ -253,7 +257,7 @@ public class play_Dalal extends AppCompatActivity
                 Log.d("test","Json is null");
             }
         } else if (id == R.id.nav_panel_play_Dalal) {
-            textView.setText("Dalal Panel");
+            textView.setText("Market Events");
             dalal_Home();
 
 

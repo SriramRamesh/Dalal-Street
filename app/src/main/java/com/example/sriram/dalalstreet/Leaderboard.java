@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -63,10 +64,14 @@ public class Leaderboard extends Fragment{
     }
 */
 
-    // Store instance variables based on arguments passed
+    // Store instance variables based on a-rguments passed
+    ProgressBar progressBar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         Names= getArguments().getStringArrayList("Names");
         //Total=getArguments().getStringArray("Total Assests");
         Pid = getArguments().getIntegerArrayList("Pid");
@@ -78,14 +83,17 @@ public class Leaderboard extends Fragment{
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_leaderboard, container, false);
+
+        progressBar=(ProgressBar)view.findViewById(R.id.progress_leaderboard);
+        progressBar.setVisibility(View.VISIBLE);
+
         ListView listView=(ListView)view.findViewById(R.id.leaderboard_list);
         Leaderboard_list_adapter list_adapter=new Leaderboard_list_adapter(context2,Pid,Names);
 
         listView.setAdapter(list_adapter);
-
+        progressBar.setVisibility(View.GONE);
         return view;
     }
-
 
 
 
