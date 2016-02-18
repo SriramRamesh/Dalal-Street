@@ -8,6 +8,12 @@
     android:layout_height="match_parent">
 
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:id="@+id/progress_mortgage"
+        />
     <ListView
         android:layout_width="match_parent"
         android:id="@+id/bank_mortgage_list"

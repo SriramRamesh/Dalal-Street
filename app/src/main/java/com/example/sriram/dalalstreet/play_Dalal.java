@@ -93,7 +93,6 @@ public class play_Dalal extends AppCompatActivity
 
         progressBar=(ProgressBar)findViewById(R.id.progress_play_Dalal);
         progressBar.setVisibility(View.VISIBLE);
-        //progressBar.serIndeterminate();
 
         api=new Api(getApplicationContext());
         api.api_Dalal_home();
@@ -109,6 +108,8 @@ public class play_Dalal extends AppCompatActivity
         textView.setText("Market Events");
         context = getApplicationContext();
         linearLayout = (LinearLayout) findViewById(R.id.Layout_play_dalal);
+        linearLayout.setVisibility(View.INVISIBLE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -137,6 +138,7 @@ public class play_Dalal extends AppCompatActivity
         Log.d("api","cash"+Cash_Value+"net"+Net_Value+"id"+Id+"stock"+Stock_Value+"\nNames"+Names_Value);
         if(Cash_Value!=null&&Net_Value!=null&&Id!=null&&Stock_Value!=0&&Names_Value!=null){
             progressBar.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
             Log.d("dalal_home","All have values");
 
         }
@@ -156,9 +158,13 @@ public class play_Dalal extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 progressBar.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.INVISIBLE);
+                Log.d("Market Events","Stock:"+Names_Value.get(position));
                 ArrayList<String> events=api.api_getMarketevent(Names_Value.get(position));
                 ArrayAdapter arrayAdapter=new ArrayAdapter(context,android.R.layout.simple_list_item_1,events);
                 listView.setAdapter(arrayAdapter);
+                progressBar.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -205,6 +211,7 @@ public class play_Dalal extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         progressBar.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.INVISIBLE);
         int id = item.getItemId();
         Fragment fragment = null;
         if (id == R.id.nav_stock_exchange_play_Dalal) {
@@ -226,8 +233,10 @@ public class play_Dalal extends AppCompatActivity
 
         } else if (id == R.id.nav_transaction_play_Dalal) {
             textView.setText("Transaction");
-            //TODO: api for transaction
-            //fragment=Transaction.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),api.getStock_Worth(),api.getStock_Bought());
+            fragment=Transaction.newInstance(context,"lol@pol.com","password");
+            if(fragment==null) {
+                Log.d("Transaction_panel", "fragment is null");
+            }
         } else if (id == R.id.nav_bids_play_Dalal) {
             textView.setText("Bids And Asks");
             api.api_Bids_and_Asks();
@@ -267,6 +276,7 @@ public class play_Dalal extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.Layout_play_dalal, fragment).commit();
 
+            linearLayout.setVisibility(View.VISIBLE);
             linearLayout.removeAllViews();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);

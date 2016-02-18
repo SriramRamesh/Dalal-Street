@@ -24,7 +24,7 @@ public class Stock_Exchange extends Fragment {
 
 
         public static Stock_Exchange newInstance(Context context_args, ArrayList<String> Stocks_args,
-                                                ArrayList<String> current_Price,int flag_args){
+                                                 ArrayList<String> current_Price,int flag_args){
             Stock_Exchange stock_exchange=new Stock_Exchange();
             context=context_args;
             Bundle args=new Bundle();

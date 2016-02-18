@@ -1,6 +1,7 @@
 package com.example.sriram.dalalstreet;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
@@ -50,8 +51,17 @@ public class TextViewWithImages extends TextView {
             }
             String resname = spannable.subSequence(matcher.start(1), matcher.end(1)).toString().trim();
             int id = context.getResources().getIdentifier(resname, "drawable", context.getPackageName());
+            /*Drawable drawable=context.getDrawable(id);
+            drawable.setBounds(0,0,drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight()+2);
+            */
             if (set) {
                 hasChanges = true;
+
+                /*spannable.setSpan(  new ImageSpan(drawable,ImageSpan.ALIGN_BOTTOM),
+                        matcher.start(),
+                        matcher.end(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                );*/
                 spannable.setSpan(  new ImageSpan(context, id),
                         matcher.start(),
                         matcher.end(),
