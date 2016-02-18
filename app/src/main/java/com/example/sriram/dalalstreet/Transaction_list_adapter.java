@@ -52,13 +52,13 @@ public class Transaction_list_adapter extends ArrayAdapter<String>{
 
         textView_Names.setText(Names.get(position));
         if(updown.get(position)==1) {
-            textView_Current.setText("Current Price:" + Current_Price.get(position)+"[img src=green/]");
+            textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=green/]");
         }
         else if(updown.get(position)==0){
-            textView_Current.setText("Current Price:" + Current_Price.get(position)+"[img src=red/]");
+            textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=red/]");
         }
-        textView_Stocks_bought.setText("Stocks bought:"+Stocks_bought.get(position).toString());
-        textView_Stocks_worth.setText("Stocks worth:"+Stocks_worth.get(position));
+        textView_Stocks_bought.setText("Stocks bought: "+Stocks_bought.get(position).toString());
+        textView_Stocks_worth.setText("Stocks worth:" +Stocks_worth.get(position));
         return rowView;
     }
 

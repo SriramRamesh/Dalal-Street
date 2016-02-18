@@ -67,7 +67,8 @@ import java.util.Map;
 public class play_Dalal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    String username="lol@pol.com";
+    String password="password";
     Context context;
     Api api;
     LinearLayout linearLayout;
@@ -216,14 +217,14 @@ public class play_Dalal extends AppCompatActivity
         Fragment fragment = null;
         if (id == R.id.nav_stock_exchange_play_Dalal) {
             textView.setText("Stock Exchange");
-            api.api_Stocks();
-            fragment=Stock_Exchange.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),1);
+            //api.api_Stocks();
+            fragment=Stock_Exchange.newInstance(context,username,password,1);
             // Handle the camera action
         }
         else if (id == R.id.nav_buy_and_sell_play_Dalal) {
             textView.setText("Buy and Sell");
-            api.api_Stocks();
-            fragment=Stock_Exchange.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),2);
+            //api.api_Stocks();
+            fragment=Stock_Exchange.newInstance(context,username,password,2);
 
 
         } else if (id == R.id.nav_bank_mortage_play_Dalal) {
@@ -233,7 +234,7 @@ public class play_Dalal extends AppCompatActivity
 
         } else if (id == R.id.nav_transaction_play_Dalal) {
             textView.setText("Transaction");
-            fragment=Transaction.newInstance(context,"lol@pol.com","password");
+            fragment=Transaction.newInstance(context,username,password);
             if(fragment==null) {
                 Log.d("Transaction_panel", "fragment is null");
             }

@@ -51,9 +51,8 @@ public class TextViewWithImages extends TextView {
             }
             String resname = spannable.subSequence(matcher.start(1), matcher.end(1)).toString().trim();
             int id = context.getResources().getIdentifier(resname, "drawable", context.getPackageName());
-            /*Drawable drawable=context.getDrawable(id);
-            drawable.setBounds(0,0,drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight()+2);
-            */
+
+
             if (set) {
                 hasChanges = true;
 
