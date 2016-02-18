@@ -4,13 +4,32 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sriram on 17/2/16.
@@ -18,20 +37,23 @@ import java.util.ArrayList;
 public class Bank_Mortgage extends Fragment {
 
     static Context context;
-    ArrayList<String> Stocks=new ArrayList<>();
-    ArrayList<String> Current_Price=new ArrayList<>();
-    ArrayList<Integer> Stocks_bought=new ArrayList<>();
+    static ArrayList<String> Names=new ArrayList<>();
+    static ArrayList<String> Current_Price=new ArrayList<>();
+    static ArrayList<String> Stocks_worth=new ArrayList<>();
+    static ArrayList<Integer> Stocks_bought=new ArrayList<>();
+    static ArrayList<Integer> updown=new ArrayList<>();
+    static Bank_Mortgage_list_adapter list_adapter;
+    static ProgressBar progressBar;
+    static JSONArray mortgage=new JSONArray();
 
-    public static Bank_Mortgage newInstance(Context context_args, ArrayList<String> Stocks_args,
-                                             ArrayList<String> current_Price,ArrayList<Integer> stocks_bought){
-        Bank_Mortgage stock_exchange=new Bank_Mortgage();
+
+    public static Bank_Mortgage newInstance(Context context_args,String username,String password){
+        Bank_Mortgage bank_mortgage=new Bank_Mortgage();
         context=context_args;
         Bundle args=new Bundle();
-        args.putStringArrayList("Stocks", Stocks_args);
-        args.putStringArrayList("Current", current_Price);
-        args.putIntegerArrayList("Stocks bought", stocks_bought);
-        stock_exchange.setArguments(args);
-        return stock_exchange;
+        args=api_mortgage(context_args, username, password);
+        bank_mortgage.setArguments(args);
+        return bank_mortgage;
 
     }
 
@@ -40,9 +62,15 @@ public class Bank_Mortgage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Stocks=getArguments().getStringArrayList("Stocks");
+        Names=new ArrayList<>();
+        Current_Price=new ArrayList<>();
+        Stocks_worth=new ArrayList<>();
+        Stocks_bought=new ArrayList<>();
+        updown=new ArrayList<>();
+        Names=getArguments().getStringArrayList("Names");
         Current_Price=getArguments().getStringArrayList("Current");
-        Stocks_bought=getArguments().getIntegerArrayList("Stocks bought");
+        Stocks_bought=getArguments().getIntegerArrayList("Stocks Bought");
+        updown=getArguments().getIntegerArrayList("updown");
 
     }
 
@@ -52,18 +80,104 @@ public class Bank_Mortgage extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_bank_mortgage, container, false);
+        progressBar=(ProgressBar)view.findViewById(R.id.progress_mortgage);
+        progressBar.setVisibility(View.VISIBLE);
         ListView listView=(ListView)view.findViewById(R.id.bank_mortgage_list);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent in = new Intent(context, Bank_Mortgage_activity.class);
-                    in.putExtra("Stock Name", Stocks.get(position));
+                    in.putExtra("Stock Name", Names.get(position));
+                    in.putExtra("Stocks Bought",Stocks_bought.get(position));
                     startActivity(in);
             }
         });
-        Bank_Mortgage_list_adapter arrayAdapter=new Bank_Mortgage_list_adapter(context,Stocks,Current_Price,Stocks_bought);
-        listView.setAdapter(arrayAdapter);
+        list_adapter=new Bank_Mortgage_list_adapter(context,Names,Current_Price,Stocks_bought,updown);
+        listView.setAdapter(list_adapter);
         return view;
+    }
+    public static Bundle api_mortgage(Context context_args, final String username_args, final String password_args){
+
+        Bundle args=new Bundle();
+        final Context context=context_args;
+        String api = context.getString(R.string.api);
+        String url="http://"+api + "/api/transactions";
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+
+                    mortgage= response.getJSONArray("stocks");
+                    Log.d("mortgage", "api response" + mortgage);
+                    if(mortgage!=null) {
+                        list_adapter.clear();
+                        for (int i = 0; i < mortgage.length(); i++) {
+
+                            try {
+
+                                JSONObject x =mortgage.getJSONObject(i);
+                                if(x != null) {
+                                    Names.add(i,x.getString("stockname"));
+                                    Current_Price.add(i,x.getString("currentprice"));
+                                    Stocks_worth.add(i,x.getString("netcash"));
+                                    Stocks_bought.add(i,x.getInt("totalstock"));
+                                    updown.add(i, x.getInt("updown"));
+
+                                }
+
+                            } catch (Exception e) {
+                                Log.d("mortgage:","respone to json Error");
+                                e.printStackTrace();
+                                break;
+                            }
+                        }
+                        if(list_adapter!=null) {
+                            progressBar.setVisibility(View.GONE);
+
+                            list_adapter.notifyDataSetChanged();
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            Context temp=context;
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String data="Error";
+                if(error instanceof NoConnectionError) {
+                    data= "No internet Access, Check your internet connection.";
+                }
+                error.printStackTrace();
+                Log.d("volley error", "" + error);
+                Toast.makeText(temp, data, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                // the GET headers:
+                headers.put("X-DALAL-API-EMAIL", username_args);
+                headers.put("X-DALAL-API-PASSWORD", password_args);
+                return headers;
+            }
+        };
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
+        args.putStringArrayList("Names", Names);
+        args.putStringArrayList("Current",Current_Price);
+        args.putStringArrayList("Stock Worth", Stocks_worth);
+        args.putIntegerArrayList("Stocks Bought", Stocks_bought);
+        args.putIntegerArrayList("updown", updown);
+        return args;
     }
 
 }

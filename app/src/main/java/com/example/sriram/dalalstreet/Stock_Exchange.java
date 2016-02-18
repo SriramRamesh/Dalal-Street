@@ -42,6 +42,7 @@ public class Stock_Exchange extends Fragment {
     static int flag=0;
     static Stock_Exchange_list_adapter arrayAdapter;
     static ProgressBar progressBar;
+    static JSONArray stocks_array=new JSONArray();
 
     public static Stock_Exchange newInstance(Context context_args,String username,String password,int flag_args){
         Stock_Exchange stock_exchange=new Stock_Exchange();
@@ -84,13 +85,15 @@ public class Stock_Exchange extends Fragment {
                         if (flag == 1) {
 
                             Intent in = new Intent(getActivity(), Stock_Exchange_activity.class);
-                            in.putExtra("Stock Name", Stocks.get(position));
+                            //in.putExtra("Stock Name", Stocks.get(position));
+                            in.putExtra("Stock JSON",stocks_array.get(position).toString());
                             getActivity().startActivity(in);
 
                         } else if (flag == 2) {
 
                             Intent in = new Intent(getActivity(), Buy_and_Sell_activity.class);
-                            in.putExtra("Stock Name", Stocks.get(position));
+                            //in.putExtra("Stock Name", Stocks.get(position));
+                            in.putExtra("Stock JSON",stocks_array.get(position).toString());
                             getActivity().startActivity(in);
 
                         }
@@ -118,7 +121,6 @@ public class Stock_Exchange extends Fragment {
 
                     Log.d("test", "api response" + response);
 
-                    JSONArray stocks_array=new JSONArray();
                     stocks_array = response.getJSONArray("stocks_list");
                     if(stocks_array!=null) {
                         arrayAdapter.clear() ;

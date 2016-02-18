@@ -47,7 +47,9 @@
         <activity android:name=".Buy" />
         <activity android:name=".Sell" />
         <activity android:name=".Trade" />
-        <activity android:name=".Bank_Mortgage_activity"></activity>
+        <activity android:name=".Bank_Mortgage_activity" />
+        <activity android:name=".Mortgage_activity" />
+        <activity android:name=".Return_Bank_Stock_activity"></activity>
     </application>
 
 </manifest>

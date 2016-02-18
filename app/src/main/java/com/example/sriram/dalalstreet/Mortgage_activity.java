@@ -2,6 +2,7 @@ package com.example.sriram.dalalstreet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,67 +21,70 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Sell extends AppCompatActivity {
+public class Mortgage_activity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
     String Stock_Name=new String();
+    int Stocks_bought=-1;
+    String username=new String();
+    String password=new String();
     Context context;
-    EditText editText_bid,editText_stocks;
-    String username,password;
-
-
+    EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sell);
+        setContentView(R.layout.activity_mortgage);
 
-        context=getApplicationContext();
-        //TODO:sharedpref and username
+        sharedPreferences=getSharedPreferences("User Details", MODE_PRIVATE);
+        /*TODO: username
+        username=sharedPreferences.getString("username",null);
+        password=sharedPreferences.getString("password",null);*/
         username="lol@pol.com";
         password="password";
-
+        context=getApplicationContext();
         Intent in=getIntent();
         Stock_Name=in.getStringExtra("Stock Name");
-
-        TextView textView=(TextView)findViewById(R.id.title_sell);
+        Stocks_bought=in.getIntExtra("Stocks Bought",-1);
+        TextView textView=(TextView)findViewById(R.id.title_mortgage_act);
         textView.setText(Stock_Name);
+
+        editText=(EditText)findViewById(R.id.no_of_stocks_mortgage_act);
+
     }
-
-
-
     private boolean validate(String s){
+        int i=0;
         try{
-            int i=0;
             i=Integer.parseInt(s);
         }catch (Exception e){
             e.printStackTrace();
             return false;
         }
+        if(i>Stocks_bought){
+            return false;
+        }
         return true;
     }
-
-    public void Call_Sell_api(View v) {
-        String stocks=editText_stocks.getText().toString();
-        String price=editText_bid.getText().toString();
-        if(validate(stocks)&&validate(price)){
-            int no_of_stocks=Integer.parseInt(stocks);
-            int bid=Integer.parseInt(price);
-            Update_api(no_of_stocks,bid,username,password);
+    public void Call_Mortgage_api(View v){
+        String s=editText.getText().toString();
+        if(validate(s)){
+            int no_of_stocks=Integer.parseInt(s);
+            Update_api(no_of_stocks,username,password);
         }
         else{
-            Toast.makeText(context, "Invalid Parmaeters", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"Invalid Number of Stocks!!!",Toast.LENGTH_LONG).show();
         }
 
     }
-    public void Update_api(final int no_of_stocks, final int bid_price,final String username_args, final String password_args){
-
+    public void Update_api(int no_of_stocks, final String username_args, final String password_args){
         String api = context.getString(R.string.api);
-        String url="http://"+api + "/api/stocks/bid/"+Stock_Name;
+        String url="http://"+api + "/api/mortgage/to_bank/"+Stock_Name+"?num_of_stock="+no_of_stocks;
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -94,13 +98,13 @@ public class Sell extends AppCompatActivity {
                     message=response.getString("message");
                     switch(status){
                         case "true":{
-                            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                            break;
-                        }
+                                        Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+                                        break;
+                                    }
                         case "false":{
-                            Toast.makeText(context,"Invalid Request",Toast.LENGTH_LONG).show();
-                            break;
-                        }
+                                        Toast.makeText(context,"Invalid Request",Toast.LENGTH_LONG).show();
+                                        break;
+                                     }
 
                     }
 
@@ -131,13 +135,6 @@ public class Sell extends AppCompatActivity {
                 headers.put("X-DALAL-API-PASSWORD", password_args);
                 return headers;
             }
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String,String> params=new HashMap<>();
-                params.put("num_of_stock",no_of_stocks+"");
-                params.put("price",bid_price+"");
-                return params;
-            }
         };
         int socketTimeout = 30000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -148,6 +145,4 @@ public class Sell extends AppCompatActivity {
 
 
     }
-
-
 }

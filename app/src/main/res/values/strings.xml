@@ -20,7 +20,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="api">10.1.93.229:3000</string>
+    <string name="api">192.168.43.79:3000</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_manual">Manual</string>
     <string name="manual_1">

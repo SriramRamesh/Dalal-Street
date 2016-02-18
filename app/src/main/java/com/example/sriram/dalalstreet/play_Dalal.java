@@ -231,7 +231,7 @@ public class play_Dalal extends AppCompatActivity
             textView.setText("Bank");
             //TODO:api.Bank_Morgage()
             //TODO fragment=Bank_Mortgage.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),api.getStock_Bought());
-
+            fragment=Bank_Mortgage.newInstance(context,username,password);
         } else if (id == R.id.nav_transaction_play_Dalal) {
             textView.setText("Transaction");
             fragment=Transaction.newInstance(context,username,password);
@@ -240,8 +240,8 @@ public class play_Dalal extends AppCompatActivity
             }
         } else if (id == R.id.nav_bids_play_Dalal) {
             textView.setText("Bids And Asks");
-            api.api_Bids_and_Asks();
-            fragment=Bids_and_Asks.newInstance(context,api.getBids(),api.getAsks());
+            //api.api_Bids_and_Asks();
+            fragment=Bids_and_Asks.newInstance(context,username,password);
 
         } else if (id == R.id.nav_leaderboard_play_Dalal) {
 

@@ -18,14 +18,17 @@ public class Bank_Mortgage_list_adapter extends ArrayAdapter<String> {
     ArrayList<String> Stocks=new ArrayList<>();
     ArrayList<String> Current_Price=new ArrayList<>();
     ArrayList<Integer> Stocks_bought=new ArrayList<>();
+    ArrayList<Integer> updown=new ArrayList<>();
 
     public Bank_Mortgage_list_adapter(Context context_args, ArrayList<String> Stocks_args,
-                                      ArrayList<String> current_Price,ArrayList<Integer> stocks_bought){
+                                      ArrayList<String> current_Price,ArrayList<Integer> stocks_bought,
+                                      ArrayList<Integer> updown_args){
         super(context_args,-1,Stocks_args);
         context=context_args;
         Stocks=Stocks_args;
         Current_Price=current_Price;
         Stocks_bought=stocks_bought;
+        updown=updown_args;
 
     }
     @Override
@@ -40,8 +43,13 @@ public class Bank_Mortgage_list_adapter extends ArrayAdapter<String> {
         TextView textView_Stocks_bought=(TextView)rowView.findViewById(R.id.stocks_bought_mortgage);
 
         textView_Names.setText(Stocks.get(position));
-        textView_Current.setText(Current_Price.get(position));
-        textView_Stocks_bought.setText(Stocks_bought.get(position));
+        if(updown.get(position)==1) {
+            textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=green/]");
+        }
+        else if(updown.get(position)==0){
+            textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=red/]");
+        }
+        textView_Stocks_bought.setText("Stocks bought: "+Stocks_bought.get(position).toString());
         return rowView;
     }
 

@@ -49,8 +49,8 @@ public class Transaction extends Fragment {
         context=context_args;
         Bundle args=new Bundle();
         args=api_transaction(context_args,username,password);
-        args.putString("useremail",username);
-        args.putString("password",password);
+        /*args.putString("useremail",username);
+        args.putString("password",password);*/
         transaction.setArguments(args);
         return transaction;
     }
