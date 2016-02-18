@@ -39,7 +39,7 @@ public class Stock_Exchange extends Fragment {
     static Context context;
     static ArrayList<String> Stocks=new ArrayList<>();
     static ArrayList<String> Current_Price=new ArrayList<>();
-    static int flag;
+    static int flag=0;
     static Stock_Exchange_list_adapter arrayAdapter;
     static ProgressBar progressBar;
 
@@ -75,53 +75,59 @@ public class Stock_Exchange extends Fragment {
         ListView listView=(ListView)view.findViewById(R.id.stock_exchange_list);
         progressBar=(ProgressBar)view.findViewById(R.id.progress_exchange);
         progressBar.setVisibility(View.VISIBLE);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    if (flag == 1) {
+        arrayAdapter=new Stock_Exchange_list_adapter(context,Stocks,Current_Price);
+        try {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    try {
+                        if (flag == 1) {
 
-                        Intent in = new Intent(context, Stock_Exchange_activity.class);
-                        in.putExtra("Stock Name", Stocks.get(position));
-                        startActivity(in);
+                            Intent in = new Intent(getActivity(), Stock_Exchange_activity.class);
+                            in.putExtra("Stock Name", Stocks.get(position));
+                            getActivity().startActivity(in);
 
-                    } else if (flag == 2) {
+                        } else if (flag == 2) {
 
-                        Intent in = new Intent(context, Buy_and_Sell_activity.class);
-                        in.putExtra("Stock Name", Stocks.get(position));
-                        startActivity(in);
+                            Intent in = new Intent(getActivity(), Buy_and_Sell_activity.class);
+                            in.putExtra("Stock Name", Stocks.get(position));
+                            getActivity().startActivity(in);
 
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-        arrayAdapter=new Stock_Exchange_list_adapter(context,Stocks,Current_Price);
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         listView.setAdapter(arrayAdapter);
         return view;
     }
 
     private static Bundle api_Stock_Exchange(Context context_args, final String username_args, final String password_args){
         Bundle args=new Bundle();
-        String api = context.getString(R.string.api);
+        String api = context_args.getString(R.string.api);
         String url = "http://" + api + "/api/stocks";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+
                     Log.d("test", "api response" + response);
 
                     JSONArray stocks_array=new JSONArray();
                     stocks_array = response.getJSONArray("stocks_list");
-
-                    for (int i = 0; i < stocks_array.length(); i++) {
-                        JSONObject temp = stocks_array.getJSONObject(i);
-                        if(temp!=null) {
-                            Stocks.add(temp.getString("stockname"));
-                            Current_Price.add(temp.getString("currentprice"));
+                    if(stocks_array!=null) {
+                        arrayAdapter.clear() ;
+                        for (int i = 0; i < stocks_array.length(); i++) {
+                            JSONObject temp = stocks_array.getJSONObject(i);
+                            if (temp != null) {
+                                Stocks.add(temp.getString("stockname"));
+                                Current_Price.add(temp.getString("currentprice"));
+                            }
                         }
                     }
 
@@ -151,8 +157,8 @@ public class Stock_Exchange extends Fragment {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
                 // the GET headers:
-                headers.put("X-DALAL-API-EMAIL", "lol@pol.com");
-                headers.put("X-DALAL-API-PASSWORD", "password");
+                headers.put("X-DALAL-API-EMAIL", username_args);
+                headers.put("X-DALAL-API-PASSWORD", password_args);
                 return headers;
             }
         };

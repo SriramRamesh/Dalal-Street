@@ -123,7 +123,9 @@ public class Transaction extends Fragment {
                     transaction= response.getJSONArray("stocks");
                     Log.d("transaction", "api response" + transaction);
                     if(transaction!=null) {
+                        list_adapter.clear();
                         for (int i = 0; i < transaction.length(); i++) {
+
                             try {
 
                                 JSONObject x =transaction.getJSONObject(i);
@@ -144,6 +146,7 @@ public class Transaction extends Fragment {
                         }
                         if(list_adapter!=null) {
                             progressBar.setVisibility(View.GONE);
+
                             list_adapter.notifyDataSetChanged();
                         }
                     }
