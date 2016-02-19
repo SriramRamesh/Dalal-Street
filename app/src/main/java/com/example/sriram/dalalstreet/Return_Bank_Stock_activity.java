@@ -92,7 +92,8 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
 
         String api = context.getString(R.string.api);
 
-        String url="http://"+api + "/api/mortgage"+Stock_Name;
+        String url="http://"+api + "/api/mortgage";
+
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -152,7 +153,13 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
                 headers.put("X-DALAL-API-PASSWORD", password_args);
                 return headers;
             }
-        };
+            @Override
+            public Map<String, String> getParams() {
+                Map<String,String> params=new HashMap<>();
+                params.put("stockname",Stock_Name);
+                return params;
+            }
+            };
         int socketTimeout = 30000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsonObjectRequest.setRetryPolicy(policy);

@@ -54,7 +54,7 @@ public class Stock_Exchange_activity extends AppCompatActivity {
             textView_all_time_high.setText("All time high: "+stock_info.getString("alltimehigh"));
             textView_all_time_low.setText("All time low: "+stock_info.getString("alltimelow"));
             textView_stocks_in_exchange.setText("Stocks in Exchange: "+stock_info.getString("stocksinexchange"));
-            textView_stocks_in_market.setText("Stocks in Exchange: "+stock_info.getString("stocksinmarket"));
+            textView_stocks_in_market.setText("Stocks in Market: "+stock_info.getString("stocksinmarket"));
 
         }catch (Exception e){
             e.printStackTrace();

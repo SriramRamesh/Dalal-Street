@@ -43,7 +43,12 @@ public class Trade extends AppCompatActivity {
         Stock_Name=in.getStringExtra("Stock Name");
         Stock_in_Exchange=in.getStringExtra("Stock in Exchange");
 
+        //TODO:shared pref
+        username="lol@pol.com";
+        password="password";
+
         TextView textView=(TextView)findViewById(R.id.title_trade);
+        editText=(EditText)findViewById(R.id.stocks_trade);
         textView.setText(Stock_Name);
 
     }
@@ -78,6 +83,7 @@ public class Trade extends AppCompatActivity {
     public void Update_api(int no_of_stocks, final String username_args, final String password_args){
         String api = context.getString(R.string.api);
         String url="http://"+api + "/api/stocks/"+Stock_Name+"?num_of_stock="+no_of_stocks;
+        Log.d("Trade ","url:"+url);
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -95,7 +101,7 @@ public class Trade extends AppCompatActivity {
                             break;
                         }
                         case "false":{
-                            Toast.makeText(context,"Invalid Request",Toast.LENGTH_LONG).show();
+                            Toast.makeText(context,message,Toast.LENGTH_LONG).show();
                             break;
                         }
 

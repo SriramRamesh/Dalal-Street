@@ -30,7 +30,7 @@ public class Sell extends AppCompatActivity {
 
     String Stock_Name=new String();
     Context context;
-    EditText editText_bid,editText_stocks;
+    EditText editText_ask,editText_stocks;
     String username,password;
 
 
@@ -48,6 +48,8 @@ public class Sell extends AppCompatActivity {
         Stock_Name=in.getStringExtra("Stock Name");
 
         TextView textView=(TextView)findViewById(R.id.title_sell);
+        editText_ask=(EditText)findViewById(R.id.ask_price_sell);
+        editText_stocks=(EditText)findViewById(R.id.stocks_to_ask_sell);
         textView.setText(Stock_Name);
     }
 
@@ -66,21 +68,21 @@ public class Sell extends AppCompatActivity {
 
     public void Call_Sell_api(View v) {
         String stocks=editText_stocks.getText().toString();
-        String price=editText_bid.getText().toString();
+        String price=editText_ask.getText().toString();
         if(validate(stocks)&&validate(price)){
             int no_of_stocks=Integer.parseInt(stocks);
-            int bid=Integer.parseInt(price);
-            Update_api(no_of_stocks,bid,username,password);
+            int ask=Integer.parseInt(price);
+            Update_api(no_of_stocks,ask,username,password);
         }
         else{
             Toast.makeText(context, "Invalid Parmaeters", Toast.LENGTH_LONG).show();
         }
 
     }
-    public void Update_api(final int no_of_stocks, final int bid_price,final String username_args, final String password_args){
+    public void Update_api(final int no_of_stocks, final int ask_price,final String username_args, final String password_args){
 
         String api = context.getString(R.string.api);
-        String url="http://"+api + "/api/stocks/bid/"+Stock_Name;
+        String url="http://"+api + "/api/stocks/ask/"+Stock_Name;
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -98,7 +100,7 @@ public class Sell extends AppCompatActivity {
                             break;
                         }
                         case "false":{
-                            Toast.makeText(context,"Invalid Request",Toast.LENGTH_LONG).show();
+                            Toast.makeText(context,message,Toast.LENGTH_LONG).show();
                             break;
                         }
 
@@ -135,7 +137,7 @@ public class Sell extends AppCompatActivity {
             protected Map<String, String> getParams(){
                 Map<String,String> params=new HashMap<>();
                 params.put("num_of_stock",no_of_stocks+"");
-                params.put("price",bid_price+"");
+                params.put("price",ask_price+"");
                 return params;
             }
         };

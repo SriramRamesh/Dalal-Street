@@ -67,25 +67,40 @@ import java.util.Map;
 public class play_Dalal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    String TAG="play_Dalal";
     String username="lol@pol.com";
     String password="password";
     Context context;
-    Api api;
     LinearLayout linearLayout;
     TextView textView;
     JSONArray leaderboard=null;
-    ArrayList<String> Names=new ArrayList<String>();
-    ArrayList<Integer> Pid=new ArrayList<Integer>();
     //String[] Total=new String[300];
-   // static Boolean progress_flag;
+    // static Boolean progress_flag;
+
+    static int market_events_No;
+    static String Cash_Value;
+    static String Net_Value;
+    static int Stock_Value;
+
+    static ArrayList<Integer> Company_Id=new ArrayList<>();
+    static ArrayList<String> Company_Names=new ArrayList<>();
 
     Button market_events;
     Button Cash;
     Button Stocks;
     Button Net_Wealth;
+
     Spinner companies;
+    static ArrayAdapter<String> dataAdapter;
+
     ListView listView;
+    static ArrayList<String> events=new ArrayList<>();
+    static ArrayAdapter arrayAdapter;
+
     ProgressBar progressBar;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,8 +110,6 @@ public class play_Dalal extends AppCompatActivity
         progressBar=(ProgressBar)findViewById(R.id.progress_play_Dalal);
         progressBar.setVisibility(View.VISIBLE);
 
-        api=new Api(getApplicationContext());
-        api.api_Dalal_home();
 
         market_events=(Button)findViewById(R.id.marketEvents);
         Cash=(Button)findViewById(R.id.cash);
@@ -109,14 +122,13 @@ public class play_Dalal extends AppCompatActivity
         textView.setText("Market Events");
         context = getApplicationContext();
         linearLayout = (LinearLayout) findViewById(R.id.Layout_play_dalal);
-        linearLayout.setVisibility(View.INVISIBLE);
+        //linearLayout.setVisibility(View.INVISIBLE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dalal_Home();
+        api_Dalal_home(username, password);
 
-        getLeaderboard();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -129,52 +141,44 @@ public class play_Dalal extends AppCompatActivity
 
     void dalal_Home(){
 
-        int market_events_No=api.getMarket_events();
-        String Cash_Value=api.getCash();
-        String Net_Value=api.getNet();
-        final ArrayList<Integer> Id=api.getId();
-        int Stock_Value=api.getStock();
-        final ArrayList<String> Names_Value=api.getNames();
 
-        Log.d("api","cash"+Cash_Value+"net"+Net_Value+"id"+Id+"stock"+Stock_Value+"\nNames"+Names_Value);
-        if(Cash_Value!=null&&Net_Value!=null&&Id!=null&&Stock_Value!=0&&Names_Value!=null){
-            progressBar.setVisibility(View.GONE);
-            linearLayout.setVisibility(View.VISIBLE);
-            Log.d("dalal_home","All have values");
+        Log.d("api","cash"+Cash_Value+"net"+Net_Value+"id"+Company_Id+"stock"+Stock_Value+"\nNames"+Company_Names);
 
-        }
-        if(Names_Value==null&&Cash_Value!=null){
-            Log.d("dalal_home","accessing server again");
-            api.api_Dalal_home();
-            dalal_Home();
-        }
-       market_events.setText(market_events_No+"\nMarket Events");
+        market_events.setText(market_events_No+"\nMarket Events");
         Cash.setText(Cash_Value + "\nCash");
         Net_Wealth.setText(Net_Value + "\nNet Wealth");
         Stocks.setText(Stock_Value + "\nStocks");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, Names_Value);
+
+        dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, Company_Names);
         companies.setAdapter(dataAdapter);
 
-        companies.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                progressBar.setVisibility(View.VISIBLE);
-                linearLayout.setVisibility(View.INVISIBLE);
-                Log.d("Market Events","Stock:"+Names_Value.get(position));
-                ArrayList<String> events=api.api_getMarketevent(Names_Value.get(position));
-                ArrayAdapter arrayAdapter=new ArrayAdapter(context,android.R.layout.simple_list_item_1,events);
-                listView.setAdapter(arrayAdapter);
-                progressBar.setVisibility(View.GONE);
-                linearLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
+        companies.setOnItemSelectedListener(listener);
     }
+    boolean flag=true;
+    AdapterView.OnItemSelectedListener listener=new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if(flag) {
+                progressBar.setVisibility(View.VISIBLE);
+                Log.d("Market Events", "Stock:" + Company_Names.get(position));
+                /*ArrayList<String> temp = */
+                api_Dalal_home(Company_Names.get(position), username, password);
+                Log.d(TAG, "temp=" + events);
+
+            }
+            /*else{
+                flag=true;
+            }*/
+
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -207,7 +211,6 @@ public class play_Dalal extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -217,9 +220,7 @@ public class play_Dalal extends AppCompatActivity
         Fragment fragment = null;
         if (id == R.id.nav_stock_exchange_play_Dalal) {
             textView.setText("Stock Exchange");
-            //api.api_Stocks();
             fragment=Stock_Exchange.newInstance(context,username,password,1);
-            // Handle the camera action
         }
         else if (id == R.id.nav_buy_and_sell_play_Dalal) {
             textView.setText("Buy and Sell");
@@ -229,8 +230,6 @@ public class play_Dalal extends AppCompatActivity
 
         } else if (id == R.id.nav_bank_mortage_play_Dalal) {
             textView.setText("Bank");
-            //TODO:api.Bank_Morgage()
-            //TODO fragment=Bank_Mortgage.newInstance(context,api.getStock_Names(),api.getCurrent_Price(),api.getStock_Bought());
             fragment=Bank_Mortgage.newInstance(context,username,password);
         } else if (id == R.id.nav_transaction_play_Dalal) {
             textView.setText("Transaction");
@@ -245,32 +244,12 @@ public class play_Dalal extends AppCompatActivity
 
         } else if (id == R.id.nav_leaderboard_play_Dalal) {
 
-            getLeaderboard();
-            Log.d("test", "Pressed Leaderboard");
-            try {
-
-                JSONObject temp = leaderboard.getJSONObject(1);
-                Log.d("leaderboard JSON", "" + temp);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-                Log.d("leaderboard JSON","Error "+e);
-            }
-
             textView.setText("Leaderboard");
-            if(Names!=null&&Pid!=null) {
-                fragment = Leaderboard.newInstance(context, Names, Pid);
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(),"Null Response",Toast.LENGTH_LONG).show();
-                Log.d("test","Json is null");
-            }
+            fragment = Leaderboard.newInstance(context, username,password);
+
         } else if (id == R.id.nav_panel_play_Dalal) {
             textView.setText("Market Events");
-            dalal_Home();
-
-
+            api_Dalal_home(username, password);
         }
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
@@ -290,34 +269,42 @@ public class play_Dalal extends AppCompatActivity
         return true;
     }
 
-
-    void getLeaderboard() {
-
-        String api = getString(R.string.api);
-        String url="http://"+api + "/api/leaderboard";
+    public void api_Dalal_home(String company_Name_args,final String username,final String password){
+        final String company_Name=company_Name_args;
+        String api = context.getString(R.string.api);
+        String url="http://"+api + "/api/home?company="+company_Name_args;
+        //ArrayList<String> events=new ArrayList<>();
+        Log.d(TAG,"url"+url);
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    Log.d("test", "api response" + response);
+                    JSONArray market_event_list=response.getJSONArray("market_events_list");
+                    //arrayAdapter.clear();
+                    //arrayAdapter.notifyDataSetChanged();
 
-                    leaderboard = response.getJSONArray("leaderboard");
-                    Log.d("test", "api response" + leaderboard);
-                    if(leaderboard!=null) {
-                        for (int i = 0; i < leaderboard.length(); i++) {
-                            try {
-                                JSONObject x =leaderboard.getJSONObject(i);
-                                if(x != null) {
-                                    Names.add(x.getString("username"));
-                                    Pid.add(x.getInt("id"));
-                                    //Total[i] = x.getString("total");
-                                }
-                            } catch (Exception e) {
-                                Log.d("r-espone to json","Error");
-                                e.printStackTrace();
-                                break;
+                    events=new ArrayList<>();
+                    for(int i=0;i<market_event_list.length();i++){
+                        try {
+                            JSONObject x =market_event_list.getJSONObject(i);
+                            if(x != null) {
+
+                                events.add(x.getString("eventname"));
                             }
+                        } catch (Exception e) {
+                            Log.d("respone to json","Error");
+                            e.printStackTrace();
+                            break;
                         }
                     }
+                    arrayAdapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, events);
+                    listView.setAdapter(arrayAdapter);
+
+                    //arrayAdapter.notifyDataSetChanged();
+                    //arrayAdapter.clear();
+                    //dalal_Home();
+                    progressBar.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -333,23 +320,100 @@ public class play_Dalal extends AppCompatActivity
                 }
                 error.printStackTrace();
                 Log.d("volley error", "" + error);
-                Toast.makeText(play_Dalal.this, data, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError{
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
                 // the GET headers:
-                headers.put("X-DALAL-API-EMAIL", "lol@pol.com");
-                headers.put("X-DALAL-API-PASSWORD", "password");
+                headers.put("X-DALAL-API-EMAIL", username);
+                headers.put("X-DALAL-API-PASSWORD", password);
                 return headers;
             }
+
+
         };
         int socketTimeout = 30000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsonObjectRequest.setRetryPolicy(policy);
 
-        Volley.newRequestQueue(this).add(jsonObjectRequest);
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
+
+
+        //return events;
+    }
+
+    public void api_Dalal_home(final String username,final String password){
+        String api = context.getString(R.string.api);
+        String url="http://"+api + "/api/home";
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d("test", "api response" + response);
+                    Stock_Value = response.getInt("price_of_tot_stock");
+                    Cash_Value = response.getString("user_current_cash");
+                    Net_Value = response.getString("user_total_calculator");
+                    market_events_No = response.getInt("market_events_total");
+                    dalal_Home();
+                    JSONArray stock_list = response.getJSONArray("stocks_list");
+
+                    dataAdapter.clear();
+                    if (stock_list != null) {
+                        for (int i = 0; i < stock_list.length(); i++) {
+                            try {
+                                JSONObject x = stock_list.getJSONObject(i);
+                                if (x != null) {
+                                    Company_Names.add(x.getString("stockname"));
+                                    Company_Id.add(x.getInt("id"));
+
+                                }
+                            } catch (Exception e) {
+                                Log.d("respone to json", "Error");
+                                e.printStackTrace();
+                                break;
+                            }
+                        }
+                        dalal_Home();
+                        dataAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        Log.d("inside Api Debug", "Names" + Company_Names);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String data="Error";
+                if(error instanceof NoConnectionError) {
+                    data= "No internet Access, Check your internet connection.";
+                }
+                error.printStackTrace();
+                Log.d("volley error", "" + error);
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                // the GET headers:
+                headers.put("X-DALAL-API-EMAIL", username);
+                headers.put("X-DALAL-API-PASSWORD", password);
+                return headers;
+            }
+
+        };
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
 
 
     }

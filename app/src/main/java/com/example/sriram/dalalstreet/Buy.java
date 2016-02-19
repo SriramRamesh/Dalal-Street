@@ -48,6 +48,8 @@ public class Buy extends AppCompatActivity {
         Stock_Name=in.getStringExtra("Stock Name");
 
         TextView textView=(TextView)findViewById(R.id.title_buy);
+        editText_bid=(EditText)findViewById(R.id.bid_price_buy);
+        editText_stocks=(EditText)findViewById(R.id.stocks_to_bid_buy);
         textView.setText(Stock_Name);
 
     }
@@ -71,7 +73,7 @@ public class Buy extends AppCompatActivity {
             Update_api(no_of_stocks,bid,username,password);
         }
         else{
-            Toast.makeText(context, "Invalid Parmaeters", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Invalid Parameters", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -96,7 +98,7 @@ public class Buy extends AppCompatActivity {
                             break;
                         }
                         case "false":{
-                            Toast.makeText(context,"Invalid Request",Toast.LENGTH_LONG).show();
+                            Toast.makeText(context,message,Toast.LENGTH_LONG).show();
                             break;
                         }
 
