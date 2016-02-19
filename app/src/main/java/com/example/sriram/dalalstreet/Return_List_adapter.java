@@ -18,8 +18,8 @@ public class Return_List_adapter extends ArrayAdapter<Integer> {
     ArrayList<Integer> Mortgaged_Price=new ArrayList<>();
     ArrayList<Integer> Stocks_mortgaged=new ArrayList<>();
 
-    public Return_List_adapter(Context context_args, ArrayList<Integer> mortgaged_Price,
-                                      ArrayList<Integer> stocks_mortgaged){
+    public Return_List_adapter(Context context_args,ArrayList<Integer> stocks_mortgaged,
+                               ArrayList<Integer> mortgaged_Price){
         super(context_args,-1,mortgaged_Price);
         context=context_args;
         Stocks_mortgaged=stocks_mortgaged;

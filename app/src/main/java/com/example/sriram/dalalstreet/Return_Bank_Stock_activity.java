@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -42,11 +43,13 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
     String Stock_Name=new String();
     ListView listView;
     String status=new String();
+    static ProgressBar progressBar;
     static ArrayList<Integer> Stock=new ArrayList<>();
     static ArrayList<Integer> Price=new ArrayList<>();
     static ArrayList<Integer> ID=new ArrayList<>();//return stock id
     //int Stocks_bought=-1;
     Return_List_adapter return_list_adapter;
+    static int temp=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,26 +66,31 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
         context=getApplicationContext();
         Intent in=getIntent();
         Stock_Name=in.getStringExtra("Stock Name");
-
-        api_getReturn_Stocks(username,password);
+        progressBar=(ProgressBar)findViewById(R.id.progress_return);
+         progressBar.setVisibility(View.VISIBLE);
+        api_getReturn_Stocks(username, password);
+        Log.d("Return", "stocks" + Stock + "Price" + Price);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Return_Bank_Stock_activity.this);
+        builder.setMessage("Do you want to buy your mortgaged stock from bank?");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Update_return_Stock(username, password, temp);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        final AlertDialog dialog=builder.create();
         return_list_adapter=new Return_List_adapter(context,Stock,Price);
+        listView.setAdapter(return_list_adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Do you want to return the stock?")
-                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Update_return_Stock(username,password, ID.get(position));
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User cancelled the dialog
-                            }
-                        });
-                builder.create();
-                builder.show();
+                temp=ID.get(position);
+                dialog.show();
+
             }
         });
 
@@ -92,7 +100,7 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
 
         String api = context.getString(R.string.api);
 
-        String url="http://"+api + "/api/mortgage";
+        String url="http://"+api + "/api/mortgage/"+Stock_Name;
 
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONObject>() {
@@ -100,6 +108,7 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     return_list_adapter.clear();
+                    progressBar.setVisibility(View.GONE);
                     Log.d("test", "api response" + response);
                     status=response.getString("success");
                     JSONArray mortgage=response.getJSONArray("mortgage");
@@ -115,6 +124,10 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
                                     ID.add(i,temp.getInt("id"));
                                 }
                             }
+                            Log.d("Return", "stocks" + Stock + "Price" + Price);
+                            //return_list_adapter=new Return_List_adapter(context,Stock,Price);
+                            return_list_adapter.notifyDataSetChanged();
+
 
                             break;
                         }
@@ -124,7 +137,7 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
                         }
 
                     }
-                    return_list_adapter.notifyDataSetChanged();
+
 
 
                 } catch (JSONException e) {
@@ -136,6 +149,7 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.GONE);
                 String data="Error";
                 if(error instanceof NoConnectionError) {
                     data= "No internet Access, Check your internet connection.";
@@ -153,12 +167,7 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
                 headers.put("X-DALAL-API-PASSWORD", password_args);
                 return headers;
             }
-            @Override
-            public Map<String, String> getParams() {
-                Map<String,String> params=new HashMap<>();
-                params.put("stockname",Stock_Name);
-                return params;
-            }
+
             };
         int socketTimeout = 30000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -172,6 +181,7 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
         String api = context.getString(R.string.api);
 
         String url="http://"+api + "/api/mortgage/return_from_bank/"+id;
+        Log.d("Return toBank", "url :" + url);
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -182,7 +192,7 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
                     String message=response.getString("message");
                     switch(status){
                         case "true":{
-                            Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                             break;
                         }
                         case "false":{
