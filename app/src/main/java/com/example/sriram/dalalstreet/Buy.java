@@ -80,7 +80,7 @@ public class Buy extends AppCompatActivity {
     public void Update_api(final int no_of_stocks, final int bid_price,final String username_args, final String password_args){
 
         String api = context.getString(R.string.api);
-        String url="http://"+api + "/api/stocks/bid/"+Stock_Name;
+        String url="http://"+api + "/api/stocks/bid/"+Stock_Name+"?num_of_stock="+no_of_stocks+"&price="+bid_price;
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -131,13 +131,13 @@ public class Buy extends AppCompatActivity {
                 headers.put("X-DALAL-API-PASSWORD", password_args);
                 return headers;
             }
-            @Override
+           /* @Override
             protected Map<String, String> getParams(){
                 Map<String,String> params=new HashMap<>();
                 params.put("num_of_stock",no_of_stocks+"");
                 params.put("price",bid_price+"");
                 return params;
-            }
+            }*/
         };
         int socketTimeout = 30000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);

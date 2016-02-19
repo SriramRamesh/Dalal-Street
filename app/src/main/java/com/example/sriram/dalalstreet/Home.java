@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,24 +13,46 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Home extends Activity {
 
     private SliderLayout sliderShow;
     private Context context;
-
+    String username;
+    String password;
+    TextViewWithImages textViewWithImages;
+    static String ans="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        //TODO: get stock news as a String and put it in home_stock_news
-
-
+        //TODO: sharedpref
+        username="lol@pol.com";
+        password="password";
         context=getApplicationContext();
+        api_Stocks(context,username,password);
+        textViewWithImages=(TextViewWithImages)findViewById(R.id.home_stock_new);
+
         sliderShow = (SliderLayout) findViewById(R.id.slider);
 
         //TODO: get images from the website and put it in slider
@@ -81,6 +104,84 @@ public class Home extends Activity {
 
     }
 
+
+    public void api_Stocks(Context context_args,final String username_args,final String password_args){
+        final Context context=context_args;
+        String api = context.getString(R.string.api);
+        String url="http://"+api + "/api/stocks";
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray stocks_info=new JSONArray();
+                try {
+
+                    stocks_info= response.getJSONArray("stocks_list");
+                    Log.d("stock", "api response" + stocks_info);
+                    if(stocks_info!=null) {
+
+                        for (int i = 0; i < stocks_info.length(); i++) {
+
+                            try {
+
+                                JSONObject x =stocks_info.getJSONObject(i);
+                                if(x != null) {
+                                    ans+=x.getString("stockname")+" "+x.getString("currentprice");
+                                    int updown= x.getInt("updown");
+                                    if(updown==1){
+                                        ans+="[img src=green/]";
+                                    }
+                                    else if(updown==0){
+                                        ans+="[img src=red/]";
+                                    }
+
+                                }
+
+                            } catch (Exception e) {
+                                Log.d("stock:","respone to json Error");
+                                e.printStackTrace();
+                                break;
+                            }
+                        }
+                        textViewWithImages.setText(ans);
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String data="Error";
+                if(error instanceof NoConnectionError) {
+                    data= "No internet Access, Check your internet connection.";
+                }
+                error.printStackTrace();
+                Log.d("volley error", "" + error);
+                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                // the GET headers:
+                headers.put("X-DALAL-API-EMAIL", username_args);
+                headers.put("X-DALAL-API-PASSWORD", password_args);
+                return headers;
+            }
+        };
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+
+        Volley.newRequestQueue(context).add(jsonObjectRequest);
+
+    }
     public void Play_Dalal(View v){
         Intent intent=new Intent(Home.this,play_Dalal.class);
         startActivity(intent);
