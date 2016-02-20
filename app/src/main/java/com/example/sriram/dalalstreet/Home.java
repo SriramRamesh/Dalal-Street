@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -33,6 +38,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Home extends Activity {
 
@@ -42,6 +49,7 @@ public class Home extends Activity {
     String password;
     TextViewWithImages textViewWithImages;
     SharedPreferences sharedPreferences;
+    HorizontalScrollView s;
 
     static String ans="";
     @Override
@@ -49,13 +57,14 @@ public class Home extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        sharedPreferences =getSharedPreferences("User Details",MODE_PRIVATE);
+        sharedPreferences =getSharedPreferences("User Details", MODE_PRIVATE);
         username=sharedPreferences.getString("username", null);
         password=sharedPreferences.getString("password", null);
         context=getApplicationContext();
         textViewWithImages=(TextViewWithImages)findViewById(R.id.home_stock_new);
         textViewWithImages.setSelected(true);
-        api_Stocks(context,username,password);
+        api_Stocks(context, username, password);
+        s=(HorizontalScrollView)findViewById(R.id.horizontaltextview);
 
         sliderShow = (SliderLayout) findViewById(R.id.slider);
 
@@ -105,9 +114,25 @@ public class Home extends Activity {
         sliderShow.addSlider(textSliderView);
         PagerIndicator pagerIndicator=(PagerIndicator)findViewById(R.id.custom_indicator);
         sliderShow.setCustomIndicator(pagerIndicator);
+        ViewTreeObserver vto 		=	s.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                s.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                getScrollMaxAmount();
+                startAutoScrolling();
+            }
+        });
 
     }
+    public void getScrollMaxAmount(){
+        int actualWidth = (s.getMeasuredWidth()-512);
+        scrollMax   = actualWidth;
+    }
 
+
+
+    private static SpannableStringBuilder builder;
 
     public void api_Stocks(Context context_args,final String username_args,final String password_args){
         final Context context=context_args;
@@ -123,20 +148,49 @@ public class Home extends Activity {
                     Log.d("stock", "api response" + stocks_info);
                     if(stocks_info!=null) {
 
+                        builder= new SpannableStringBuilder();
+
                         for (int i = 0; i < stocks_info.length(); i++) {
 
                             try {
 
                                 JSONObject x =stocks_info.getJSONObject(i);
                                 if(x != null) {
-                                    ans+=x.getString("stockname")+" "+x.getString("currentprice");
+                                    if(Build.VERSION.SDK_INT<21) {
+                                        builder.append(x.getString("stockname")).append(" ").append(x.getString("currentprice"));
+                                        int updown = x.getInt("updown");
+                                        if (updown == 1) {
+                                            builder.setSpan(new ImageSpan(context, R.drawable.green), builder.length() - 1,
+                                                    builder.length(), 0);
+                                        } else if (updown == 0) {
+                                            builder.setSpan(new ImageSpan(context, R.drawable.red), builder.length() - 1,
+                                                    builder.length(), 0);
+
+                                        }
+                                    }
+                                    else{
+                                        builder.append(x.getString("stockname")).append(" ").append(x.getString("currentprice"));
+                                        int updown = x.getInt("updown");
+                                        if (updown == 1) {
+                                            builder.append(" ",new ImageSpan(context, R.drawable.green),0);
+                                        } else if (updown == 0) {
+                                            builder.append(" ",new ImageSpan(context, R.drawable.red), 0);
+
+                                        }
+
+                                    }
+
+
+
+
+                                    /*ans+=x.getString("stockname")+" "+x.getString("currentprice");
                                     int updown= x.getInt("updown");
                                     if(updown==1){
                                         ans+="[img src=green/]";
                                     }
                                     else if(updown==0){
                                         ans+="[img src=red/]";
-                                    }
+                                    }*/
 
                                 }
 
@@ -146,7 +200,9 @@ public class Home extends Activity {
                                 break;
                             }
                         }
-                        textViewWithImages.setText(ans);
+                        Log.d("text view",""+builder);
+                        textViewWithImages.setText(builder);
+                        s.fling(10);
 
 
                     }
@@ -224,6 +280,44 @@ public class Home extends Activity {
     protected void onStop() {
         sliderShow.stopAutoCycle();
         super.onStop();
+    }
+
+    private Timer scrollTimer		=	null;
+    private TimerTask scrollerSchedule;
+    public void startAutoScrolling(){
+        if (scrollTimer == null) {
+            scrollTimer					=	new Timer();
+            final Runnable Timer_Tick 	= 	new Runnable() {
+                public void run() {
+                    moveScrollView();
+                }
+            };
+
+            if(scrollerSchedule != null){
+                scrollerSchedule.cancel();
+                scrollerSchedule = null;
+            }
+            scrollerSchedule = new TimerTask(){
+                @Override
+                public void run(){
+                    runOnUiThread(Timer_Tick);
+                }
+            };
+
+            scrollTimer.schedule(scrollerSchedule, 30, 30);
+        }
+    }
+    private int scrollMax;
+    private int scrollPos =	0;
+
+
+    public void moveScrollView(){
+        scrollPos							= 	(int) (s.getScrollX() + 1.0);
+        if(scrollPos >= scrollMax){
+            scrollPos						=	0;
+        }
+        s.scrollTo(scrollPos, 0);
+
     }
 
 

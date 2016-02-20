@@ -24,12 +24,17 @@
         android:layout_alignParentTop="true" />
 
 
+<HorizontalScrollView
+    android:layout_width="match_parent"
+    android:layout_marginBottom="10dp"
+    android:layout_below="@+id/home_Title"
+    android:id="@+id/horizontaltextview"
+
+    android:layout_height="wrap_content">
     <com.example.sriram.dalalstreet.TextViewWithImages
-        android:layout_marginBottom="10dp"
-        android:layout_below="@+id/home_Title"
-        android:id="@+id/home_stock_new"
         android:singleLine="true"
         android:ellipsize="marquee"
+        android:id="@+id/home_stock_new"
         android:marqueeRepeatLimit ="marquee_forever"
         android:focusable="true"
         android:drawablePadding="5dp"
@@ -42,10 +47,15 @@
         />
 
 
+
+
+</HorizontalScrollView>
+
+
     <com.daimajia.slider.library.SliderLayout
         android:layout_width="fill_parent"
         android:layout_height="200dp"
-        android:layout_below="@+id/home_stock_new"
+        android:layout_below="@+id/horizontaltextview"
         android:id="@+id/slider">
     </com.daimajia.slider.library.SliderLayout>
 
