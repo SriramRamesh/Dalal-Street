@@ -32,6 +32,7 @@ public class Buy extends AppCompatActivity {
     Context context;
     EditText editText_bid,editText_stocks;
     String username,password;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,9 @@ public class Buy extends AppCompatActivity {
 
         context=getApplicationContext();
         //TODO:sharedpref and username
-        username="lol@pol.com";
-        password="password";
+        sharedPreferences =getSharedPreferences("User Details",MODE_PRIVATE);
+        username=sharedPreferences.getString("username", null);
+        password=sharedPreferences.getString("password", null);
 
 
         Intent in=getIntent();

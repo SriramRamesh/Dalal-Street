@@ -42,12 +42,10 @@ public class Mortgage_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mortgage);
 
-        sharedPreferences=getSharedPreferences("User Details", MODE_PRIVATE);
-        /*TODO: username
-        username=sharedPreferences.getString("username",null);
-        password=sharedPreferences.getString("password",null);*/
-        username="lol@pol.com";
-        password="password";
+        sharedPreferences =getSharedPreferences("User Details",MODE_PRIVATE);
+        username=sharedPreferences.getString("username", null);
+        password=sharedPreferences.getString("password", null);
+
         context=getApplicationContext();
         Intent in=getIntent();
         Stock_Name=in.getStringExtra("Stock Name");

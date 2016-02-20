@@ -18,15 +18,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="25dp"
                 android:layout_alignParentLeft="true"
                 android:text="No of Stocks"
+                android:textColor="#000000"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="25dp"
+                android:textColor="#000000"
                 android:text="Price"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"

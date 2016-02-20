@@ -68,8 +68,8 @@ public class play_Dalal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     String TAG="play_Dalal";
-    String username="lol@pol.com";
-    String password="password";
+    String username;
+    String password;
     Context context;
     LinearLayout linearLayout;
     TextView textView;
@@ -81,6 +81,7 @@ public class play_Dalal extends AppCompatActivity
     static String Cash_Value;
     static String Net_Value;
     static int Stock_Value;
+    TextView textView_username;
 
     static ArrayList<Integer> Company_Id=new ArrayList<>();
     static ArrayList<String> Company_Names=new ArrayList<>();
@@ -98,7 +99,7 @@ public class play_Dalal extends AppCompatActivity
     static ArrayAdapter arrayAdapter;
 
     ProgressBar progressBar;
-
+    SharedPreferences sharedPreferences;
 
 
     @Override
@@ -109,6 +110,14 @@ public class play_Dalal extends AppCompatActivity
 
         progressBar=(ProgressBar)findViewById(R.id.progress_play_Dalal);
         progressBar.setVisibility(View.VISIBLE);
+
+
+
+        sharedPreferences =getSharedPreferences("User Details", MODE_PRIVATE);
+        username=sharedPreferences.getString("username", null);
+        password=sharedPreferences.getString("password", null);
+
+        Log.d("play_Dalal","username"+username+"password"+password);
 
 
         market_events=(Button)findViewById(R.id.marketEvents);
@@ -137,6 +146,13 @@ public class play_Dalal extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         //TextView Dalal
         navigationView.setNavigationItemSelectedListener(this);
+        /*try {
+            textView_username = (TextView) findViewById(R.id.nav_user_email);
+            textView_username.setText(username);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }*/
     }
 
     void dalal_Home(){

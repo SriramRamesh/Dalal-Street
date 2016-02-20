@@ -3,7 +3,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -16,7 +16,7 @@
     <string name="home_stock_news">Facebook 99.09[img src=red/]   Cipla 108.02[img src=green/]  Pragyan 289.46[img src=green/]  Github 104.23[img src=green/]  Yahoo 233.98[img src=red/]  HP 176.22[img src=green/]  Apple 613.83[img src=red/]  TCS 215.23[img src=green/]  MorganStanley 284.33[img src=green/]  Sony 119.88[img src=green/] Intel 83.73[img src=green/] Infy 236.81[img src=green/] Dell 295.83[img src=green/] LG 20.29[img src=green/]</string>
     <string name="title_activity_home">Home</string>
 
-    <string name="pop_up_message">John Mathai - +919790922889\nGiridhar - +919003206058\nVisit our Facebook Page for regular updates.</string>
+    <string name="pop_up_message">John Mathai - +919790922889\n Rishi - +918056083211 \nVisit our Facebook Page for regular updates.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -27,42 +27,43 @@
         "<center>Dalal Street</center>\n
         Its a virtual stock exchange game.\n
         A stock exchange is a place where the company sell their stocks to the public at a price which depends on the company market value and performance.
-        \n\n\n
+        \n\n
         The price of the stock varies on the market events and stock transactions between different players.
         We have introduced a new feature in Dalal Street,Market Events.
         It lets you to have a better picture on what stock to buy,sell or trade.
         New events will be put up from time to time,so watch out for new events and trade wisely.
-        \n
-        <b>Note</b>: The events are fictional and not related to real market condtions.
-        \n
-        <b>Stock Exchange</b>
-        \n
-        Market events (Blue colour flash card) gives you the number of market events that has happened till this instant.
-        Cash (Green colour flash card) shows the amount of virtual money that is in your account.
+
+        \n<b>Note</b>: The events are fictional and not related to real market condtions.
+
+        \n\n<b>Stock Exchange</b>
+
+        \nMarket events (Blue colour flash card) gives you the number of market events that has happened till this instant.
+        \nCash (Green colour flash card) shows the amount of virtual money that is in your account.
         Stock (Yellow colour flash card) shows the value of the stocks that you own in currency rate. This keeps varying depending on the present market price of the stocks that you own.
         Net wealth (Red colour flash card) is the sum of CASH + STOCK.
-        The number of stock in exchange gives the units of shares that the company has put up on the market. Stock in Market refers to the number of stocks that are owned by the players.
+
+        \nThe number of stock in exchange gives the units of shares that the company has put up on the market. Stock in Market refers to the number of stocks that are owned by the players.
         To trade stocks enter the amount of stocks you want to purchase from the company and hit the trade button<b>(green trade button).</b>
         The notification panel on the right tracks all your stock transactions and moves in the market.
-        \n
-        <b>Buy and Sell</b>
+
+        \n\n<b>Buy and Sell</b>
         It lists all the stocks in the market and its related information.
         To <b>bid</b> or <b>ask</b> click on the company name. The pop up will open as shown in the picture above.
         You can bid and ask from Buy Panel and Sell Panel respectively.
         The <b>highest bid</b> will be given higher preference .
         You can also sell shares provided that you own shares of the company .The <b>sell bid</b> with the least price will be given highest preference.
-        \n
-        <b>Bank Mortgage</b>
+
+        \n\n<b>Bank Mortgage</b>
         It lists all the stocks that you own and its related information.
         Bank Mortgage can be used to mortgage stocks with the bank at <b>75%(may vary during the course of time)</b> of the present price of the mortgaged stocks and later the mortgaged stocks can be bought back from the bank at the stocks current price.
         Company Profile
         This page gives information about previous market news and history of a stock which can be of help to predict the rate of the stock.
 
-        <b>Bids and Asks</b>
+        \n\n<b>Bids and Asks</b>
         This page shows you the Bids and Asks which are not successful.
         <b>Hint : </b>If your <b>bids are not successful</b> means that  someone has already bid for that stock at a higher price which will be given more preference over yours, so try bidding at a higher price till it succeeds<b>(that is totally up to you)</b>.Always keep a check on your cash and market events and go for the right stocks.
         If your <b>not able to sell your stocks at your ask price</b> it simply means that someone else has asked for the same stock at an even lower price which will be given more preference over your ask price.(try to sell it at lower prices if you want to sell your stocks successfully).
-        You can now play Dalal Street on the go.The new interface is compatible with <b>mobile devices.</b>
+
         <b>Do not hesitate to contact us if you face any problems.</b>Have a great Pragyan!"
     </string>
 

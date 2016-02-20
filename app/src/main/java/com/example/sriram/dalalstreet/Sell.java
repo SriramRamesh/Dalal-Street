@@ -2,6 +2,7 @@ package com.example.sriram.dalalstreet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +33,7 @@ public class Sell extends AppCompatActivity {
     Context context;
     EditText editText_ask,editText_stocks;
     String username,password;
-
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +42,9 @@ public class Sell extends AppCompatActivity {
 
         context=getApplicationContext();
         //TODO:sharedpref and username
-        username="lol@pol.com";
-        password="password";
+        sharedPreferences =getSharedPreferences("User Details",MODE_PRIVATE);
+        username=sharedPreferences.getString("username", null);
+        password=sharedPreferences.getString("password", null);
 
         Intent in=getIntent();
         Stock_Name=in.getStringExtra("Stock Name");

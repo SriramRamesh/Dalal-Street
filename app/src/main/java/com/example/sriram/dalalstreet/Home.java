@@ -3,6 +3,7 @@ package com.example.sriram.dalalstreet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,18 +41,20 @@ public class Home extends Activity {
     String username;
     String password;
     TextViewWithImages textViewWithImages;
+    SharedPreferences sharedPreferences;
+
     static String ans="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        //TODO: sharedpref
-        username="lol@pol.com";
-        password="password";
+        sharedPreferences =getSharedPreferences("User Details",MODE_PRIVATE);
+        username=sharedPreferences.getString("username", null);
+        password=sharedPreferences.getString("password", null);
         context=getApplicationContext();
-        api_Stocks(context,username,password);
         textViewWithImages=(TextViewWithImages)findViewById(R.id.home_stock_new);
+        api_Stocks(context,username,password);
 
         sliderShow = (SliderLayout) findViewById(R.id.slider);
 

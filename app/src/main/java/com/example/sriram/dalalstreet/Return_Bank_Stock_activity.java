@@ -57,12 +57,10 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
 
         listView=(ListView)findViewById(R.id.return_stock_list);
         //listView.setAdapter(list_adapter);
-        sharedPreferences=getSharedPreferences("User Details", MODE_PRIVATE);
-        /*TODO: username
-        username=sharedPreferences.getString("username",null);
-        password=sharedPreferences.getString("password",null);*/
-        username="lol@pol.com";
-        password="password";
+        sharedPreferences =getSharedPreferences("User Details",MODE_PRIVATE);
+        username=sharedPreferences.getString("username", null);
+        password=sharedPreferences.getString("password", null);
+
         context=getApplicationContext();
         Intent in=getIntent();
         Stock_Name=in.getStringExtra("Stock Name");
