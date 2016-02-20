@@ -104,6 +104,8 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+
                 try {
                     return_list_adapter.clear();
                     progressBar.setVisibility(View.GONE);
@@ -114,12 +116,19 @@ public class Return_Bank_Stock_activity extends AppCompatActivity {
                     switch(status){
                         case "true":{
 
-                            for(int i=0;i<mortgage.length();i++) {
-                                temp=mortgage.getJSONObject(i);
-                                if(temp!=null){
-                                    Stock.add(i,temp.getInt("numofstock"));
-                                    Price.add(i,temp.getInt("pricerendered"));
-                                    ID.add(i,temp.getInt("id"));
+                            if(mortgage.length()==0){
+                                Toast.makeText(context,"No stocks",Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                for (int i = 0; i < mortgage.length(); i++) {
+                                    temp = mortgage.getJSONObject(i);
+                                    if (temp != null) {
+                                        Stock.add(i, temp.getInt("numofstock"));
+                                        Price.add(i, temp.getInt("pricerendered"));
+                                        ID.add(i, temp.getInt("id"));
+
+                                    }
+
                                 }
                             }
                             Log.d("Return", "stocks" + Stock + "Price" + Price);

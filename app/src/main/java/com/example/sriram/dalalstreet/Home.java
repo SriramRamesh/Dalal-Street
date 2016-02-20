@@ -54,6 +54,7 @@ public class Home extends Activity {
         password=sharedPreferences.getString("password", null);
         context=getApplicationContext();
         textViewWithImages=(TextViewWithImages)findViewById(R.id.home_stock_new);
+        textViewWithImages.setSelected(true);
         api_Stocks(context,username,password);
 
         sliderShow = (SliderLayout) findViewById(R.id.slider);

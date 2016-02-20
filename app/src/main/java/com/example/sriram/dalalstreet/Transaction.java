@@ -118,12 +118,21 @@ public class Transaction extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 JSONArray transaction=new JSONArray();
+
                 try {
 
                     transaction= response.getJSONArray("stocks");
                     Log.d("transaction", "api response" + transaction);
-                    if(transaction!=null) {
+                    if(response.getJSONArray("stocks").length()==0){
+                        Toast.makeText(context,"No transactions",Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                    else{
                         list_adapter.clear();
+                        if(transaction==null){
+                            Toast.makeText(context,"No transactions",Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
                         for (int i = 0; i < transaction.length(); i++) {
 
                             try {

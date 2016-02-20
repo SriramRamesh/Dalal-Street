@@ -91,6 +91,8 @@ public class Bids_and_Asks extends Fragment {
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+
                 try {
                     Log.d("test", "api response" + response);
                     if(response!=null){
@@ -98,14 +100,22 @@ public class Bids_and_Asks extends Fragment {
                         arrayAdapter2.clear();
                     }
                     JSONArray bids = response.getJSONArray("bids");
-                    JSONArray asks = response.getJSONArray("asks");
-                    for (int i = 0; i < bids.length(); i++) {
-                        JSONObject temp = bids.getJSONObject(i);
-                        Bids.add(temp.getString("message"));
+                    if(response.getJSONArray("bids").length()==0){
+                        Toast.makeText(context,"No bids",Toast.LENGTH_LONG).show();
                     }
-                    for (int i = 0; i < asks.length(); i++) {
-                        JSONObject temp = asks.getJSONObject(i);
-                        Asks.add(temp.getString("message"));
+                    JSONArray asks = response.getJSONArray("asks");
+                    if(response.getJSONArray("asks").length()==0){
+                        Toast.makeText(context,"No asks",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        for (int i = 0; i < bids.length(); i++) {
+                            JSONObject temp = bids.getJSONObject(i);
+                            Bids.add(temp.getString("message"));
+                        }
+                        for (int i = 0; i < asks.length(); i++) {
+                            JSONObject temp = asks.getJSONObject(i);
+                            Asks.add(temp.getString("message"));
+                        }
                     }
                     progressBar.setVisibility(View.GONE);
                     arrayAdapter.notifyDataSetChanged();

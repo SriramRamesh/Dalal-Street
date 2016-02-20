@@ -106,6 +106,7 @@ public class play_Dalal extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_dalal);
+        Log.d("play dalal", "on Create");
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         progressBar=(ProgressBar)findViewById(R.id.progress_play_Dalal);
@@ -264,8 +265,39 @@ public class play_Dalal extends AppCompatActivity
             fragment = Leaderboard.newInstance(context, username,password);
 
         } else if (id == R.id.nav_panel_play_Dalal) {
+            setContentView(R.layout.activity_play_dalal);
+            progressBar.setVisibility(View.VISIBLE);
+
+            market_events=(Button)findViewById(R.id.marketEvents);
+            Cash=(Button)findViewById(R.id.cash);
+            Stocks=(Button)findViewById(R.id.stock);
+            Net_Wealth=(Button)findViewById(R.id.netWealth);
+            companies=(Spinner)findViewById(R.id.home_spinner);
+            listView=(ListView)findViewById(R.id.market_list_content);
+            textView = (TextView) findViewById(R.id.title_content_play_dalal);
+
             textView.setText("Market Events");
+            context = getApplicationContext();
+            linearLayout = (LinearLayout) findViewById(R.id.Layout_play_dalal);
+            //linearLayout.setVisibility(View.INVISIBLE);
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
             api_Dalal_home(username, password);
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            //TextView Dalal
+            navigationView.setNavigationItemSelectedListener(this);
+            progressBar.setVisibility(View.GONE);
+
+
+
         }
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();

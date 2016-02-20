@@ -109,7 +109,7 @@ public class Stock_Exchange extends Fragment {
         return view;
     }
 
-    private static Bundle api_Stock_Exchange(Context context_args, final String username_args, final String password_args){
+    private static Bundle api_Stock_Exchange(final Context context_args, final String username_args, final String password_args){
         Bundle args=new Bundle();
         String api = context_args.getString(R.string.api);
         String url = "http://" + api + "/api/stocks";
@@ -119,11 +119,18 @@ public class Stock_Exchange extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
 
-                    Log.d("test", "api response" + response);
 
+                    Log.d("test", "api response" + response);
                     stocks_array = response.getJSONArray("stocks_list");
-                    if(stocks_array!=null) {
+                    if(response.getJSONArray("stocks_list").length()==0) {
+                        Toast.makeText(context, "No stocks in exchange", Toast.LENGTH_LONG).show();
+                    }
+                        else {
+
                         arrayAdapter.clear() ;
+                        if(stocks_array==null){
+                            Toast.makeText(context_args,"No stocks in Stock Exchange",Toast.LENGTH_LONG).show();
+                        }
                         for (int i = 0; i < stocks_array.length(); i++) {
                             JSONObject temp = stocks_array.getJSONObject(i);
                             if (temp != null) {

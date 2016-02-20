@@ -105,10 +105,17 @@ public class Bank_Mortgage extends Fragment {
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("bank mortgage",""+response.length());
+
 
                 try {
 
                     mortgage= response.getJSONArray("stocks");
+                    if(response.getJSONArray("stocks").length()==0){
+                        Toast.makeText(context,"No stocks in bank",Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+
                     Log.d("mortgage", "api response" + mortgage);
                     if(mortgage!=null) {
                         list_adapter.clear();
@@ -125,6 +132,10 @@ public class Bank_Mortgage extends Fragment {
                                     updown.add(i, x.getInt("updown"));
 
                                 }
+                                else{
+                                    Toast.makeText(context,"No stocks in bank",Toast.LENGTH_LONG).show();
+                                }
+
 
                             } catch (Exception e) {
                                 Log.d("mortgage:","respone to json Error");
@@ -140,6 +151,7 @@ public class Bank_Mortgage extends Fragment {
                     }
 
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
 

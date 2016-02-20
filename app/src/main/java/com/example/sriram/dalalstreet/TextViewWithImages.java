@@ -1,8 +1,12 @@
 package com.example.sriram.dalalstreet;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -32,6 +36,7 @@ public class TextViewWithImages extends TextView {
 
     private static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
 
+
     private static boolean addImages(Context context, Spannable spannable) {
         Pattern refImg = Pattern.compile("\\Q[img src=\\E([a-zA-Z0-9_]+?)\\Q/]\\E");
         boolean hasChanges = false;
@@ -52,20 +57,23 @@ public class TextViewWithImages extends TextView {
             String resname = spannable.subSequence(matcher.start(1), matcher.end(1)).toString().trim();
             int id = context.getResources().getIdentifier(resname, "drawable", context.getPackageName());
 
-
             if (set) {
                 hasChanges = true;
 
-                /*spannable.setSpan(  new ImageSpan(drawable,ImageSpan.ALIGN_BOTTOM),
-                        matcher.start(),
-                        matcher.end(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                );*/
-                spannable.setSpan(  new ImageSpan(context, id),
+                /*Drawable drawable=context.getDrawable(id);
+                spannable.setSpan(  new ImageSpan(drawable,ImageSpan.ALIGN_BOTTOM+2),
                         matcher.start(),
                         matcher.end(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 );
+            */
+                spannable.setSpan(new ImageSpan(context, id),
+                        matcher.start(),
+                        matcher.end(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                );
+
+
             }
         }
 
