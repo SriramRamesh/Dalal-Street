@@ -11,12 +11,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ds"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name="pragyan.delta.sriram.dalalstreet.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,31 +25,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".play_Dalal"
+            android:name="pragyan.delta.sriram.dalalstreet.play_Dalal"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Home"
+            android:name="pragyan.delta.sriram.dalalstreet.Home"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Manual"
+            android:name="pragyan.delta.sriram.dalalstreet.Manual"
             android:label="@string/title_activity_manual"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Stock_Exchange_activity"
+            android:name="pragyan.delta.sriram.dalalstreet.Stock_Exchange_activity"
             android:label="@string/title_activity_stock__exchange_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Buy_and_Sell_activity"
+            android:name="pragyan.delta.sriram.dalalstreet.Buy_and_Sell_activity"
             android:label="@string/title_activity_buy_and__sell_activity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Buy" />
-        <activity android:name=".Sell" />
-        <activity android:name=".Trade" />
-        <activity android:name=".Bank_Mortgage_activity" />
-        <activity android:name=".Mortgage_activity" />
-        <activity android:name=".Return_Bank_Stock_activity"></activity>
+        <activity android:name="pragyan.delta.sriram.dalalstreet.Buy" />
+        <activity android:name="pragyan.delta.sriram.dalalstreet.Sell" />
+        <activity android:name="pragyan.delta.sriram.dalalstreet.Trade" />
+        <activity android:name="pragyan.delta.sriram.dalalstreet.Bank_Mortgage_activity" />
+        <activity android:name="pragyan.delta.sriram.dalalstreet.Mortgage_activity" />
+        <activity android:name="pragyan.delta.sriram.dalalstreet.Return_Bank_Stock_activity"></activity>
     </application>
 
 </manifest>

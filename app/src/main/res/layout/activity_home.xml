@@ -31,7 +31,7 @@
     android:id="@+id/horizontaltextview"
 
     android:layout_height="wrap_content">
-    <com.example.sriram.dalalstreet.TextViewWithImages
+    <pragyan.delta.sriram.dalalstreet.TextViewWithImages
         android:singleLine="true"
         android:ellipsize="marquee"
         android:id="@+id/home_stock_new"
