@@ -1,4 +1,4 @@
-package Pragyan.Delta.Dalal.Street;
+package org.pragyan.dalalstreet;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,15 +19,15 @@ import android.widget.HorizontalScrollView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import Pragyan.android.volley.AuthFailureError;
-import Pragyan.android.volley.DefaultRetryPolicy;
-import Pragyan.android.volley.NoConnectionError;
-import Pragyan.android.volley.Request;
-import Pragyan.android.volley.Response;
-import Pragyan.android.volley.RetryPolicy;
-import Pragyan.android.volley.VolleyError;
-import Pragyan.android.volley.toolbox.JsonObjectRequest;
-import Pragyan.android.volley.toolbox.Volley;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;

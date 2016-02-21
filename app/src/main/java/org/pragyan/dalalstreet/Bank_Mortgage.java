@@ -1,4 +1,4 @@
-package Pragyan.Delta.Dalal.Street;
+package org.pragyan.dalalstreet;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -8,19 +8,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import Pragyan.android.volley.AuthFailureError;
-import Pragyan.android.volley.DefaultRetryPolicy;
-import Pragyan.android.volley.NoConnectionError;
-import Pragyan.android.volley.Request;
-import Pragyan.android.volley.Response;
-import Pragyan.android.volley.RetryPolicy;
-import Pragyan.android.volley.VolleyError;
-import Pragyan.android.volley.toolbox.JsonObjectRequest;
-import Pragyan.android.volley.toolbox.Volley;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,26 +34,28 @@ import java.util.Map;
 /**
  * Created by sriram on 17/2/16.
  */
-public class Transaction extends Fragment {
+public class Bank_Mortgage extends Fragment {
+
+
     static Context context;
-    /*static String username=new String();
-    static String password=new String();*/
     static ArrayList<String> Names=new ArrayList<>();
     static ArrayList<String> Current_Price=new ArrayList<>();
     static ArrayList<String> Stocks_worth=new ArrayList<>();
     static ArrayList<Integer> Stocks_bought=new ArrayList<>();
     static ArrayList<Integer> updown=new ArrayList<>();
-    static Transaction_list_adapter list_adapter;
+    static Bank_Mortgage_list_adapter list_adapter;
     static ProgressBar progressBar;
-    public static Transaction newInstance(Context context_args,String username,String password){
-        Transaction transaction=new Transaction();
+    static JSONArray mortgage=new JSONArray();
+
+
+    public static Bank_Mortgage newInstance(Context context_args,String username,String password){
+        Bank_Mortgage bank_mortgage=new Bank_Mortgage();
         context=context_args;
         Bundle args=new Bundle();
-        args=api_transaction(context_args,username,password);
-        /*args.putString("useremail",username);
-        args.putString("password",password);*/
-        transaction.setArguments(args);
-        return transaction;
+        args=api_mortgage(context_args, username, password);
+        bank_mortgage.setArguments(args);
+        return bank_mortgage;
+
     }
 
 
@@ -60,55 +63,44 @@ public class Transaction extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            Names=new ArrayList<>();
-            Current_Price=new ArrayList<>();
-            Stocks_worth=new ArrayList<>();
-            Stocks_bought=new ArrayList<>();
-            updown=new ArrayList<>();
-            /*username = getArguments().getString("useremail");
-            password = getArguments().getString("password");*/
-            Names=getArguments().getStringArrayList("Names");
-            Current_Price= getArguments().getStringArrayList("Current");
-            Stocks_worth=getArguments().getStringArrayList("Stock Worth");
-            Stocks_bought=getArguments().getIntegerArrayList("Stocks Bought");
-            updown=getArguments().getIntegerArrayList("updown");
-        }catch (Exception e){
-            e.printStackTrace();
-
-        }
-
-
-
+        Names=new ArrayList<>();
+        Current_Price=new ArrayList<>();
+        Stocks_worth=new ArrayList<>();
+        Stocks_bought=new ArrayList<>();
+        updown=new ArrayList<>();
+        Names=getArguments().getStringArrayList("Names");
+        Current_Price=getArguments().getStringArrayList("Current");
+        Stocks_bought=getArguments().getIntegerArrayList("Stocks Bought");
+        updown=getArguments().getIntegerArrayList("updown");
 
     }
-
 
     // Inflate the view for the fragment based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_transaction, container, false);
-        progressBar=(ProgressBar)view.findViewById(R.id.progress_transaction);
+        View view = inflater.inflate(R.layout.fragment_bank_mortgage, container, false);
+        progressBar=(ProgressBar)view.findViewById(R.id.progress_mortgage);
         progressBar.setVisibility(View.VISIBLE);
-        ListView listView=(ListView)view.findViewById(R.id.transaction_list);
-        if(Names==null) {
-            Log.d("Trans frag", "Null parms");
-        }
-
-        Log.d("Trans frag", "Names" + Names);
-
-        list_adapter=new Transaction_list_adapter(context,Names,Current_Price,Stocks_bought,Stocks_worth,updown);
-        try{
-            listView.setAdapter(list_adapter);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        ListView listView=(ListView)view.findViewById(R.id.bank_mortgage_list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent in = new Intent(context, Bank_Mortgage_activity.class);
+                    in.putExtra("Stock Name", Names.get(position));
+                    in.putExtra("Stocks Bought",Stocks_bought.get(position));
+                    startActivity(in);
+            }
+        });
+        list_adapter=new Bank_Mortgage_list_adapter(context,Names,Current_Price,Stocks_bought,updown);
+        listView.setAdapter(list_adapter);
         return view;
     }
+    static boolean alive;
+    static String alive_message;
 
-    public static Bundle api_transaction(Context context_args, final String username_args, final String password_args){
+    public static Bundle api_mortgage(Context context_args, final String username_args, final String password_args){
 
         Bundle args=new Bundle();
         final Context context=context_args;
@@ -117,39 +109,33 @@ public class Transaction extends Fragment {
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                JSONArray transaction=new JSONArray();
+                Log.d("bank mortgage",""+response.length());
 
                 try {
-                    boolean alive;
-                    String alive_message;
+
                     alive=response.getBoolean("alive");
                     alive_message=response.getString("alive_message");
                     if(!alive){
-                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG);
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG).show();
                         Intent intent=new Intent( context,Home.class);
-                        intent.putExtra("alive", false);
+                        intent.putExtra("alive",false);
                         context.startActivity(intent);
 
                     }
-
-                    transaction= response.getJSONArray("stocks");
-                    Log.d("transaction", "api response" + transaction);
+                    mortgage= response.getJSONArray("stocks");
                     if(response.getJSONArray("stocks").length()==0){
-                        Toast.makeText(context,"No transactions",Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,"No stocks in bank",Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                     }
-                    else{
+
+                    Log.d("mortgage", "api response" + mortgage);
+                    if(mortgage!=null) {
                         list_adapter.clear();
-                        if(transaction==null){
-                            Toast.makeText(context,"No transactions",Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                        for (int i = 0; i < transaction.length(); i++) {
+                        for (int i = 0; i < mortgage.length(); i++) {
 
                             try {
 
-
-                                JSONObject x =transaction.getJSONObject(i);
+                                JSONObject x =mortgage.getJSONObject(i);
                                 if(x != null) {
                                     Names.add(i,x.getString("stockname"));
                                     Current_Price.add(i,x.getString("currentprice"));
@@ -158,9 +144,13 @@ public class Transaction extends Fragment {
                                     updown.add(i, x.getInt("updown"));
 
                                 }
+                                else{
+                                    Toast.makeText(context,"No stocks in bank",Toast.LENGTH_LONG).show();
+                                }
+
 
                             } catch (Exception e) {
-                                Log.d("transaction:","respone to json Error");
+                                Log.d("mortgage:","respone to json Error");
                                 e.printStackTrace();
                                 break;
                             }
@@ -173,6 +163,7 @@ public class Transaction extends Fragment {
                     }
 
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
 
@@ -209,11 +200,8 @@ public class Transaction extends Fragment {
         args.putStringArrayList("Current",Current_Price);
         args.putStringArrayList("Stock Worth", Stocks_worth);
         args.putIntegerArrayList("Stocks Bought", Stocks_bought);
-        args.putIntegerArrayList("updown",updown);
+        args.putIntegerArrayList("updown", updown);
         return args;
     }
-
-
-
 
 }
