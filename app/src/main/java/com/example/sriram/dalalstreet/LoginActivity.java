@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
 
                 try {
-                    boolean alive;
+                    /*boolean alive;
                     String alive_message;
                     alive=response.getBoolean("alive");
                     alive_message=response.getString("alive_message");
@@ -153,24 +153,28 @@ public class LoginActivity extends AppCompatActivity {
                         return;
 
                     }
-
+*/
                     auth_error= response.getBoolean("auth_error");
                     Log.d("stock", "api response" + response);
                     if(auth_error){
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(),"Invalid credential",Toast.LENGTH_LONG).show();
                     }
+                    else{
+                        progressBar.setVisibility(View.GONE);
+                        auth_error=false;
+                        logged_in=true;
+                        editor.putBoolean("logged in",true);
+                        editor.putString("username",username_args) ;
+                        editor.putString("password",password_args);
+                        editor.apply();
+                        Log.d("Log in","usename"+username_args+"password"+password_args);
+                        Intent intent=new Intent(LoginActivity.this,Home.class);
+                        startActivity(intent);
+
+                    }
                 } catch (JSONException e) {
                     progressBar.setVisibility(View.GONE);
-                    auth_error=false;
-                    logged_in=true;
-                    editor.putBoolean("logged in",true);
-                    editor.putString("username",username_args) ;
-                    editor.putString("password",password_args);
-                    editor.apply();
-                    Log.d("Log in","usename"+username_args+"password"+password_args);
-                    Intent intent=new Intent(LoginActivity.this,Home.class);
-                    startActivity(intent);
                     e.printStackTrace();
                 }
 

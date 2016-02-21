@@ -101,6 +101,7 @@ public class play_Dalal extends AppCompatActivity
 
     ProgressBar progressBar;
     SharedPreferences sharedPreferences;
+   // SharedPreferences.Editor editor;
 
 
     @Override
@@ -118,6 +119,7 @@ public class play_Dalal extends AppCompatActivity
         sharedPreferences =getSharedPreferences("User Details", MODE_PRIVATE);
         username=sharedPreferences.getString("username", null);
         password=sharedPreferences.getString("password", null);
+       // editor=sharedPreferences.edit();
 
         Log.d("play_Dalal","username"+username+"password"+password);
 
@@ -309,7 +311,8 @@ public class play_Dalal extends AppCompatActivity
             linearLayout.removeAllViews();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else {
             // error in creating fragment
             Log.e("test", "Error in creating fragment");
         }

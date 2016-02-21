@@ -67,6 +67,7 @@ public class Home extends Activity {
             e.printStackTrace();
         }
 
+
         sharedPreferences =getSharedPreferences("User Details", MODE_PRIVATE);
         username=sharedPreferences.getString("username", null);
         password=sharedPreferences.getString("password", null);
@@ -252,10 +253,15 @@ public class Home extends Activity {
         if(alive) {
             Intent intent = new Intent(Home.this, play_Dalal.class);
             startActivity(intent);
-
+            return;
         }
         else{
-            Toast.makeText(context,alive_message,Toast.LENGTH_LONG).show();
+            if(alive_message==null){
+                Toast.makeText(context, "Invalid credentials", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(context, alive_message, Toast.LENGTH_LONG).show();
+            }
         }
     }
     public void Show_Contact(View v){
@@ -325,7 +331,9 @@ public class Home extends Activity {
     public void moveScrollView(){
         scrollPos							= 	(int) (s.getScrollX() + 1.0);
         if(scrollPos >= scrollMax){
-            scrollPos						=	0;
+
+            scrollPos=0;
+
         }
         s.scrollTo(scrollPos, 0);
 
