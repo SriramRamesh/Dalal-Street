@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         if(logged_in){
             Intent intent=new Intent(LoginActivity.this,Home.class);
             startActivity(intent);
+            this.finish();
         }
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -171,6 +172,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("Log in","usename"+username_args+"password"+password_args);
                     Intent intent=new Intent(LoginActivity.this,Home.class);
                     startActivity(intent);
+                    LoginActivity.this.finish();
                     e.printStackTrace();
                 }
 

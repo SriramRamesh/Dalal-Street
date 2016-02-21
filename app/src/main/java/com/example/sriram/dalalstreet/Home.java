@@ -49,6 +49,7 @@ public class Home extends Activity {
     String password;
     TextViewWithImages textViewWithImages;
     SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     HorizontalScrollView s;
     Boolean alive=false;
 
@@ -68,6 +69,7 @@ public class Home extends Activity {
         }
 
         sharedPreferences =getSharedPreferences("User Details", MODE_PRIVATE);
+        editor=sharedPreferences.edit();
         username=sharedPreferences.getString("username", null);
         password=sharedPreferences.getString("password", null);
         context=getApplicationContext();
@@ -287,6 +289,15 @@ public class Home extends Activity {
         startActivity(intent);
         return;
     }
+public void Logout(View v) {
+    editor.putBoolean("logged in", false);
+    editor.putString("username", null);
+    editor.putString("password", null);
+    editor.apply();
+    Intent intent = new Intent(Home.this, LoginActivity.class);
+    startActivity(intent);
+    Home.this.finish();
+}
     @Override
     protected void onStop() {
         sliderShow.stopAutoCycle();
@@ -327,7 +338,7 @@ public class Home extends Activity {
         if(scrollPos >= scrollMax){
             scrollPos						=	0;
         }
-        s.scrollTo(scrollPos, 0);
+        //s.scrollTo(scrollPos, 0);
 
     }
 
