@@ -41,7 +41,6 @@ public class Sell extends AppCompatActivity {
         setContentView(R.layout.activity_sell);
 
         context=getApplicationContext();
-        //TODO:sharedpref and username
         sharedPreferences =getSharedPreferences("User Details",MODE_PRIVATE);
         username=sharedPreferences.getString("username", null);
         password=sharedPreferences.getString("password", null);

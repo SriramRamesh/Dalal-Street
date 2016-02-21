@@ -90,6 +90,17 @@ public class Mortgage_activity extends AppCompatActivity {
                 try {
                     String status;
                     String message;
+                    boolean alive;
+                    String alive_message;
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG);
+                        Intent intent=new Intent( context,Home.class);
+                        intent.putExtra("alive", false);
+                        context.startActivity(intent);
+
+                    }
 
                     Log.d("test", "api response" + response);
                     status=response.getString("success");

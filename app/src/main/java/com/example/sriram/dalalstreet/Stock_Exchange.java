@@ -39,6 +39,7 @@ public class Stock_Exchange extends Fragment {
     static Context context;
     static ArrayList<String> Stocks=new ArrayList<>();
     static ArrayList<String> Current_Price=new ArrayList<>();
+    static ArrayList<Integer> upDown=new ArrayList<>();
     static int flag=0;
     static Stock_Exchange_list_adapter arrayAdapter;
     static ProgressBar progressBar;
@@ -61,8 +62,12 @@ public class Stock_Exchange extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stocks=new ArrayList<>();
+        Current_Price=new ArrayList<>();
+        upDown=new ArrayList<>();
         Stocks=getArguments().getStringArrayList("Stocks");
         Current_Price=getArguments().getStringArrayList("Current");
+        upDown=getArguments().getIntegerArrayList("updown");
         //flag=getArguments().getInt("Flag");
 
     }
@@ -76,7 +81,7 @@ public class Stock_Exchange extends Fragment {
         ListView listView=(ListView)view.findViewById(R.id.stock_exchange_list);
         progressBar=(ProgressBar)view.findViewById(R.id.progress_exchange);
         progressBar.setVisibility(View.VISIBLE);
-        arrayAdapter=new Stock_Exchange_list_adapter(context,Stocks,Current_Price);
+        arrayAdapter=new Stock_Exchange_list_adapter(context,Stocks,Current_Price,upDown);
         try {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -119,6 +124,17 @@ public class Stock_Exchange extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
 
+                    boolean alive;
+                    String alive_message;
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG);
+                        Intent intent=new Intent( context,Home.class);
+                        intent.putExtra("alive", false);
+                        context.startActivity(intent);
+
+                    }
 
                     Log.d("test", "api response" + response);
                     stocks_array = response.getJSONArray("stocks_list");
@@ -136,6 +152,7 @@ public class Stock_Exchange extends Fragment {
                             if (temp != null) {
                                 Stocks.add(temp.getString("stockname"));
                                 Current_Price.add(temp.getString("currentprice"));
+                                upDown.add(temp.getInt("updown"));
                             }
                         }
                     }
@@ -178,6 +195,7 @@ public class Stock_Exchange extends Fragment {
         Volley.newRequestQueue(context).add(jsonObjectRequest);
         args.putStringArrayList("Stocks", Stocks);
         args.putStringArrayList("Current", Current_Price);
+        args.putIntegerArrayList("updown",upDown);
         return args;
     }
 

@@ -36,6 +36,7 @@ import java.util.Map;
  */
 public class Bank_Mortgage extends Fragment {
 
+
     static Context context;
     static ArrayList<String> Names=new ArrayList<>();
     static ArrayList<String> Current_Price=new ArrayList<>();
@@ -96,6 +97,9 @@ public class Bank_Mortgage extends Fragment {
         listView.setAdapter(list_adapter);
         return view;
     }
+    static boolean alive;
+    static String alive_message;
+
     public static Bundle api_mortgage(Context context_args, final String username_args, final String password_args){
 
         Bundle args=new Bundle();
@@ -107,9 +111,17 @@ public class Bank_Mortgage extends Fragment {
             public void onResponse(JSONObject response) {
                 Log.d("bank mortgage",""+response.length());
 
-
                 try {
 
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG).show();
+                        Intent intent=new Intent( context,Home.class);
+                        intent.putExtra("alive",false);
+                        context.startActivity(intent);
+
+                    }
                     mortgage= response.getJSONArray("stocks");
                     if(response.getJSONArray("stocks").length()==0){
                         Toast.makeText(context,"No stocks in bank",Toast.LENGTH_LONG).show();

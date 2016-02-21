@@ -1,6 +1,9 @@
 package com.example.sriram.dalalstreet;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ public class Bank_Mortgage_list_adapter extends ArrayAdapter<String> {
     ArrayList<String> Current_Price=new ArrayList<>();
     ArrayList<Integer> Stocks_bought=new ArrayList<>();
     ArrayList<Integer> updown=new ArrayList<>();
+    SpannableStringBuilder builder;
 
     public Bank_Mortgage_list_adapter(Context context_args, ArrayList<String> Stocks_args,
                                       ArrayList<String> current_Price,ArrayList<Integer> stocks_bought,
@@ -43,14 +47,39 @@ public class Bank_Mortgage_list_adapter extends ArrayAdapter<String> {
         TextView textView_Stocks_bought=(TextView)rowView.findViewById(R.id.stocks_bought_mortgage);
 
         textView_Names.setText(Stocks.get(position));
+        builder=new SpannableStringBuilder();
+        int temp=updown.get(position);
+        builder.append("Current Price :");
+        builder.append(Current_Price.get(position));
+        if(Build.VERSION.SDK_INT<21) {
+            if (temp == 1) {
+                builder.setSpan(new ImageSpan(context, R.drawable.green,ImageSpan.ALIGN_BOTTOM+1), builder.length() - 1,
+                        builder.length(), 0);
+            }
+            else if (temp == 0) {
+                builder.setSpan(new ImageSpan(context, R.drawable.red,ImageSpan.ALIGN_BOTTOM+4), builder.length() - 1,
+                        builder.length(), 0);
+
+            }
+        }
+        else {
+            if (temp == 1) {
+                builder.append(" ", new ImageSpan(context, R.drawable.green, ImageSpan.ALIGN_BOTTOM + 1), 0);
+            }
+            else if (temp == 0) {
+                builder.append(" ", new ImageSpan(context, R.drawable.red, ImageSpan.ALIGN_BOTTOM + 4), 0);
+
+            }
+        }
+            /*
         if(updown.get(position)==1) {
             textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=green/]");
         }
         else if(updown.get(position)==0){
             textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=red/]");
+        }*/
+            textView_Stocks_bought.setText(builder);
+            return rowView;
         }
-        textView_Stocks_bought.setText("Stocks bought: "+Stocks_bought.get(position).toString());
-        return rowView;
-    }
 
-}
+    }

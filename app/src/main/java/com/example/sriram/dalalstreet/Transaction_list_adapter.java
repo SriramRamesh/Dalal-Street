@@ -1,6 +1,10 @@
 package com.example.sriram.dalalstreet;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,12 +55,31 @@ public class Transaction_list_adapter extends ArrayAdapter<String>{
         TextView textView_Stocks_worth=(TextView) rowView.findViewById(R.id.stock_worth_transaction);
 
         textView_Names.setText(Names.get(position));
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
         if(updown.get(position)==1) {
-            textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=green/]");
+            if (Build.VERSION.SDK_INT < 21) {
+                builder.append("Current Price").append(" :").append(Current_Price.get(position));
+                builder.setSpan(new ImageSpan(context, R.drawable.green, ImageSpan.ALIGN_BOTTOM + 1), builder.length() - 1,
+                        builder.length(), 0);
+            } else {
+                builder.append("Current Price").append(" :").append(Current_Price.get(position));
+                builder.append(" ", new ImageSpan(context, R.drawable.green, ImageSpan.ALIGN_BOTTOM + 1), 0);
+            }
         }
         else if(updown.get(position)==0){
-            textView_Current.setText("Current Price: " + Current_Price.get(position)+"[img src=red/]");
+            if(Build.VERSION.SDK_INT<21) {
+                builder.append("Current Price").append(" :").append(Current_Price.get(position));
+                builder.setSpan(new ImageSpan(context, R.drawable.red,ImageSpan.ALIGN_BOTTOM+1), builder.length() - 1,
+                        builder.length(), 0);
+            }
+            else {
+                builder.append("Current Price").append(" :").append(Current_Price.get(position));
+                builder.append(" ", new ImageSpan(context, R.drawable.red, ImageSpan.ALIGN_BOTTOM + 1), 0);
+
+            }
         }
+        textView_Current.setText(builder);
         textView_Stocks_bought.setText("Stocks bought: "+Stocks_bought.get(position).toString());
         textView_Stocks_worth.setText("Stocks worth:" +Stocks_worth.get(position));
         return rowView;

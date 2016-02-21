@@ -15,7 +15,7 @@
         android:id="@+id/stock_name_Mortgage"
 
         />
-    <com.example.sriram.dalalstreet.TextViewWithImages
+    <TextView
         android:layout_width="match_parent"
         android:layout_gravity="left|start"
         android:layout_marginLeft="10dp"

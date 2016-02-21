@@ -50,12 +50,22 @@ public class Home extends Activity {
     TextViewWithImages textViewWithImages;
     SharedPreferences sharedPreferences;
     HorizontalScrollView s;
+    Boolean alive=false;
+
 
     static String ans="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        try{
+            Intent intent=getIntent();
+            intent.getBooleanExtra("alive",false);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         sharedPreferences =getSharedPreferences("User Details", MODE_PRIVATE);
         username=sharedPreferences.getString("username", null);
@@ -134,6 +144,7 @@ public class Home extends Activity {
 
     private static SpannableStringBuilder builder;
 
+    String alive_message;
     public void api_Stocks(Context context_args,final String username_args,final String password_args){
         final Context context=context_args;
         String api = context.getString(R.string.api);
@@ -143,6 +154,13 @@ public class Home extends Activity {
             public void onResponse(JSONObject response) {
                 JSONArray stocks_info=new JSONArray();
                 try {
+
+                    alive=response.getBoolean("alive");
+                     alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG).show();
+
+                    }
 
                     stocks_info= response.getJSONArray("stocks_list");
                     Log.d("stock", "api response" + stocks_info);
@@ -160,10 +178,10 @@ public class Home extends Activity {
                                         builder.append(x.getString("stockname")).append(" ").append(x.getString("currentprice"));
                                         int updown = x.getInt("updown");
                                         if (updown == 1) {
-                                            builder.setSpan(new ImageSpan(context, R.drawable.green), builder.length() - 1,
+                                            builder.setSpan(new ImageSpan(context, R.drawable.green,ImageSpan.ALIGN_BOTTOM+1), builder.length() - 1,
                                                     builder.length(), 0);
                                         } else if (updown == 0) {
-                                            builder.setSpan(new ImageSpan(context, R.drawable.red), builder.length() - 1,
+                                            builder.setSpan(new ImageSpan(context, R.drawable.red,ImageSpan.ALIGN_BOTTOM+4), builder.length() - 1,
                                                     builder.length(), 0);
 
                                         }
@@ -172,25 +190,13 @@ public class Home extends Activity {
                                         builder.append(x.getString("stockname")).append(" ").append(x.getString("currentprice"));
                                         int updown = x.getInt("updown");
                                         if (updown == 1) {
-                                            builder.append(" ",new ImageSpan(context, R.drawable.green),0);
+                                            builder.append(" ",new ImageSpan(context, R.drawable.green,ImageSpan.ALIGN_BOTTOM+1),0);
                                         } else if (updown == 0) {
-                                            builder.append(" ",new ImageSpan(context, R.drawable.red), 0);
+                                            builder.append(" ",new ImageSpan(context, R.drawable.red,ImageSpan.ALIGN_BOTTOM+4), 0);
 
                                         }
 
                                     }
-
-
-
-
-                                    /*ans+=x.getString("stockname")+" "+x.getString("currentprice");
-                                    int updown= x.getInt("updown");
-                                    if(updown==1){
-                                        ans+="[img src=green/]";
-                                    }
-                                    else if(updown==0){
-                                        ans+="[img src=red/]";
-                                    }*/
 
                                 }
 
@@ -243,9 +249,14 @@ public class Home extends Activity {
 
     }
     public void Play_Dalal(View v){
-        Intent intent=new Intent(Home.this,play_Dalal.class);
-        startActivity(intent);
-        return;
+        if(alive) {
+            Intent intent = new Intent(Home.this, play_Dalal.class);
+            startActivity(intent);
+
+        }
+        else{
+            Toast.makeText(context,alive_message,Toast.LENGTH_LONG).show();
+        }
     }
     public void Show_Contact(View v){
 

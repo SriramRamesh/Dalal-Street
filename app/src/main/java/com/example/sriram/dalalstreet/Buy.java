@@ -79,6 +79,9 @@ public class Buy extends AppCompatActivity {
         }
 
     }
+    static boolean alive;
+    static String alive_message;
+
     public void Update_api(final int no_of_stocks, final int bid_price,final String username_args, final String password_args){
 
         String api = context.getString(R.string.api);
@@ -90,6 +93,15 @@ public class Buy extends AppCompatActivity {
                 try {
                     String status;
                     String message;
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG).show();
+                        Intent intent=new Intent( context,Home.class);
+                        intent.putExtra("alive", false);
+                        context.startActivity(intent);
+
+                    }
 
                     Log.d("test", "api response" + response);
                     status=response.getString("success");

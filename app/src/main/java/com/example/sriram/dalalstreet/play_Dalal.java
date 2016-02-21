@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
@@ -400,6 +401,17 @@ public class play_Dalal extends AppCompatActivity
             public void onResponse(JSONObject response) {
                 try {
                     Log.d("test", "api response" + response);
+                    boolean alive;
+                    String alive_message;
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG);
+                        Intent intent=new Intent( context,Home.class);
+                        intent.putExtra("alive", false);
+                        context.startActivity(intent);
+
+                    }
                     Stock_Value = response.getInt("price_of_tot_stock");
                     Cash_Value = response.getString("user_current_cash");
                     Net_Value = response.getString("user_total_calculator");

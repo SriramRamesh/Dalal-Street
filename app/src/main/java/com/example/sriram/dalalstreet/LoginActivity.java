@@ -144,6 +144,15 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
 
                 try {
+                    boolean alive;
+                    String alive_message;
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(getApplicationContext(),alive_message,Toast.LENGTH_LONG);
+                        return;
+
+                    }
 
                     auth_error= response.getBoolean("auth_error");
                     Log.d("stock", "api response" + response);

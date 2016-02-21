@@ -3,6 +3,7 @@ package com.example.sriram.dalalstreet;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -120,6 +121,17 @@ public class Transaction extends Fragment {
                 JSONArray transaction=new JSONArray();
 
                 try {
+                    boolean alive;
+                    String alive_message;
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG);
+                        Intent intent=new Intent( context,Home.class);
+                        intent.putExtra("alive", false);
+                        context.startActivity(intent);
+
+                    }
 
                     transaction= response.getJSONArray("stocks");
                     Log.d("transaction", "api response" + transaction);
@@ -136,6 +148,7 @@ public class Transaction extends Fragment {
                         for (int i = 0; i < transaction.length(); i++) {
 
                             try {
+
 
                                 JSONObject x =transaction.getJSONObject(i);
                                 if(x != null) {

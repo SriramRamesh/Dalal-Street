@@ -2,9 +2,12 @@ package com.example.sriram.dalalstreet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -43,12 +46,33 @@ public class Stock_Exchange_activity extends AppCompatActivity {
 
 
             textView_stock_name.setText("Stock Name: "+stock_info.getString("stockname"));
+            SpannableStringBuilder builder=new SpannableStringBuilder();
             if(stock_info.getInt("updown")==1) {
-                textView_current_price.setText("Current Price: " + stock_info.getString("currentprice")+"[img src=green/]");
+                if(Build.VERSION.SDK_INT<21) {
+                    builder.append("Current Price").append(" :").append(stock_info.getString("currentprice"));
+                    builder.setSpan(new ImageSpan(context, R.drawable.green, ImageSpan.ALIGN_BOTTOM + 1), builder.length() - 1,
+                            builder.length(), 0);
+                }
+                else {
+                    builder.append("Current Price").append(" :").append(stock_info.getString("currentprice"));
+                    builder.append(" ", new ImageSpan(context, R.drawable.green, ImageSpan.ALIGN_BOTTOM + 1), 0);
+
+                }
+
             }
             else if(stock_info.getInt("updown")==0) {
-                textView_current_price.setText("Current Price: " + stock_info.getString("currentprice")+"[img src=red/]");
+                if(Build.VERSION.SDK_INT<21) {
+                    builder.append("Current Price").append(" :").append(stock_info.getString("currentprice"));
+                    builder.setSpan(new ImageSpan(context, R.drawable.red, ImageSpan.ALIGN_BOTTOM + 1), builder.length() - 1,
+                            builder.length(), 0);
+                }
+                else {
+                    builder.append("Current Price").append(" :").append(stock_info.getString("currentprice"));
+                    builder.append(" ", new ImageSpan(context, R.drawable.red, ImageSpan.ALIGN_BOTTOM + 1), 0);
+
+                }
             }
+            textView_current_price.setText(builder);
             textView_day_high.setText("Day High: "+stock_info.getString("dayhigh"));
             textView_day_low.setText("Day Low"+stock_info.getString("daylow"));
             textView_all_time_high.setText("All time high: "+stock_info.getString("alltimehigh"));

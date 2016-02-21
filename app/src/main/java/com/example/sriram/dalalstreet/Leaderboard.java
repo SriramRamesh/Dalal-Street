@@ -3,6 +3,7 @@ package com.example.sriram.dalalstreet;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -98,6 +99,17 @@ public class Leaderboard extends Fragment{
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    boolean alive;
+                    String alive_message;
+                    alive=response.getBoolean("alive");
+                    alive_message=response.getString("alive_message");
+                    if(!alive){
+                        Toast.makeText(context,alive_message,Toast.LENGTH_LONG).show();
+                        Intent intent=new Intent( context,Home.class);
+                        intent.putExtra("alive", false);
+                        context.startActivity(intent);
+
+                    }
                     JSONArray leaderboard = response.getJSONArray("leaderboard");
                     Log.d(TAG, "api response" + leaderboard);
                     if(leaderboard!=null) {

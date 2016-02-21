@@ -49,7 +49,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="353\n Market events"
+                android:text="Market events"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginEnd="2dp"
@@ -64,7 +64,7 @@
                 android:layout_height="50dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginEnd="2dp"
-                android:text="8070.0\nCash"
+                android:text="Cash"
                 android:layout_weight="2"
                 android:textColor="@android:color/white"
                 android:background="#5CB85C"
@@ -85,7 +85,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginEnd="2dp"
                 android:background="#F0AD4E"
-                android:text="469.52\nStock"
+                android:text="Stock"
                 android:id="@+id/stock"
                 />
             <Button
@@ -95,7 +95,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_weight="2"
-                android:text="8539.52\nNet Wealth"
+                android:text="Net Wealth"
                 android:background="#D9534F"
                 android:textColor="@android:color/white"
                 android:id="@+id/netWealth"
