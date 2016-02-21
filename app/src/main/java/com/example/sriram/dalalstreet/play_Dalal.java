@@ -78,6 +78,7 @@ public class play_Dalal extends AppCompatActivity
     //String[] Total=new String[300];
     // static Boolean progress_flag;
 
+    SharedPreferences.Editor editor;
     static int market_events_No;
     static String Cash_Value;
     static String Net_Value;
@@ -116,6 +117,7 @@ public class play_Dalal extends AppCompatActivity
 
 
         sharedPreferences =getSharedPreferences("User Details", MODE_PRIVATE);
+        editor=sharedPreferences.edit();
         username=sharedPreferences.getString("username", null);
         password=sharedPreferences.getString("password", null);
 
