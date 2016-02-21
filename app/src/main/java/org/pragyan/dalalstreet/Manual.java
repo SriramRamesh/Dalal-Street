@@ -1,4 +1,4 @@
-package Pragyan.Delta.Dalal.Street;
+package org.pragyan.dalalstreet;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

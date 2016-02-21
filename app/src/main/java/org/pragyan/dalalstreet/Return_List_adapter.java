@@ -1,4 +1,4 @@
-package Pragyan.Delta.Dalal.Street;
+package org.pragyan.dalalstreet;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sriram.dalalstreet">
+    package="org.pragyan.dalalstreet">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="pragyan.delta.sriram.dalalstreet.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,31 +25,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pragyan.delta.sriram.dalalstreet.play_Dalal"
+            android:name=".play_Dalal"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="pragyan.delta.sriram.dalalstreet.Home"
+            android:name=".Home"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="pragyan.delta.sriram.dalalstreet.Manual"
+            android:name=".Manual"
             android:label="@string/title_activity_manual"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="pragyan.delta.sriram.dalalstreet.Stock_Exchange_activity"
+            android:name=".Stock_Exchange_activity"
             android:label="@string/title_activity_stock__exchange_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="pragyan.delta.sriram.dalalstreet.Buy_and_Sell_activity"
+            android:name=".Buy_and_Sell_activity"
             android:label="@string/title_activity_buy_and__sell_activity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="pragyan.delta.sriram.dalalstreet.Buy" />
-        <activity android:name="pragyan.delta.sriram.dalalstreet.Sell" />
-        <activity android:name="pragyan.delta.sriram.dalalstreet.Trade" />
-        <activity android:name="pragyan.delta.sriram.dalalstreet.Bank_Mortgage_activity" />
-        <activity android:name="pragyan.delta.sriram.dalalstreet.Mortgage_activity" />
-        <activity android:name="pragyan.delta.sriram.dalalstreet.Return_Bank_Stock_activity"></activity>
+        <activity android:name=".Buy" />
+        <activity android:name=".Sell" />
+        <activity android:name=".Trade" />
+        <activity android:name=".Bank_Mortgage_activity" />
+        <activity android:name=".Mortgage_activity" />
+        <activity android:name=".Return_Bank_Stock_activity"></activity>
     </application>
 
 </manifest>

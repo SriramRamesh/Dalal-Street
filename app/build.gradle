@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.example.sriram.dalalstreet"
+        applicationId "org.pragyan.dalalstreet"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1

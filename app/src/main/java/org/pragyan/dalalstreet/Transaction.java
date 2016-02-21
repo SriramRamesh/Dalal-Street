@@ -1,4 +1,4 @@
-package Pragyan.Delta.Dalal.Street;
+package org.pragyan.dalalstreet;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -12,15 +12,15 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import Pragyan.android.volley.AuthFailureError;
-import Pragyan.android.volley.DefaultRetryPolicy;
-import Pragyan.android.volley.NoConnectionError;
-import Pragyan.android.volley.Request;
-import Pragyan.android.volley.Response;
-import Pragyan.android.volley.RetryPolicy;
-import Pragyan.android.volley.VolleyError;
-import Pragyan.android.volley.toolbox.JsonObjectRequest;
-import Pragyan.android.volley.toolbox.Volley;
+import org.android.volley.AuthFailureError;
+import org.android.volley.DefaultRetryPolicy;
+import org.android.volley.NoConnectionError;
+import org.android.volley.Request;
+import org.android.volley.Response;
+import org.android.volley.RetryPolicy;
+import org.android.volley.VolleyError;
+import org.android.volley.toolbox.JsonObjectRequest;
+import org.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
